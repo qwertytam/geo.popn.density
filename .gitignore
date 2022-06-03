@@ -1,0 +1,11 @@
+# R Files
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+.Rdata
+.httr-oauth
+.Rapp.history
+
+# OS Files
+.DS_Store
