@@ -6,16 +6,12 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of geo_popn_density is to find the population densities for
-selected countries.
+The goal of geo_popn_density is to analyse the population densities for
+selected countries - currently only Australia.
 
 ## Installation
 
-You can install the development version of geo_popn_density like so:
-
-``` r
-This is a simple script, so just download from GitHub...hopefully!
-```
+Just clone and go from GitHub.
 
 ## Australian Data
 
@@ -28,45 +24,10 @@ to `au.csv` in the data directory.
 
 ### References:
 
--   (<https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram>)\[Description
-    of the Australian Statistical Geography Standard\]
--   (<https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download>)\[ABS
-    population data by SA2\]
--   (<https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument>)\[Significant
-    Urban Area to SA2\]
+-   [https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram](Description%20of%20the%20Australian%20Statistical%20Geography%20Standard)
+-   [https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download](ABS%20population%20data%20by%20SA2)
+-   [https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument](Significant%20Urban%20Area%20to%20SA2)
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-# library(geo_popn_density)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
-
-``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
-```
-
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
-
-You can also embed plots, for example:
-
-<img src="man/figures/README-pressure-1.png" width="100%" />
-
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+To come…
