@@ -24,9 +24,12 @@ to `au.csv` in the data directory.
 
 ### References:
 
--   [https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram](Description%20of%20the%20Australian%20Statistical%20Geography%20Standard)
--   [https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download](ABS%20population%20data%20by%20SA2)
--   [https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument](Significant%20Urban%20Area%20to%20SA2)
+-   [Description of the Australian Statistical Geography
+    Standard](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram)
+-   [ABS population data by
+    SA2](https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download)
+-   [Significant Urban Area to
+    SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
 
 ## Example
 
