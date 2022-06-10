@@ -39,9 +39,9 @@ counties <- get_acs(geography = "county",
                     keep_geo_vars = TRUE,
                     survey = "acs5")
 
-# Get the population at the "block group" level
+# Get the population at the "tract" level
 GetPopn <- function(state){
-  popn <- get_decennial(geography = "block group",
+  popn <- get_decennial(geography = "tract",
                         variables = c(popn = "P1_001N"),
                         cache_table = TRUE,
                         year = 2020,
@@ -54,9 +54,9 @@ popn <- state_fips %>%
   select(-c(NAME, variable)) %>%
   rename(Popn_Est = value)
 
-# Get the "block group" geographies
+# Get the "tract" geographies
 GetGeos <- function(state){
-  geo <- get_acs(geography = "block group",
+  geo <- get_acs(geography = "tract",
                  table = "B01003",
                  cache_table = TRUE,
                  year = 2020,
@@ -70,7 +70,7 @@ GetGeos <- function(state){
 geos <- state_fips %>%
   map_dfr(GetGeos) %>%
   as_tibble() %>%
-  select(-c(TRACTCE, BLKGRPCE, AFFGEOID, NAME.x, NAMELSAD, LSAD, NAME.y,
+  select(-c(TRACTCE, AFFGEOID, NAME.x, NAMELSAD, LSAD, NAME.y,
             variable, estimate, moe, geometry))
 
 # Download county to metro and micro statistical area relationship mappings
@@ -144,8 +144,9 @@ us <- us%>%
 
 us <- us %>%
   rename(State_Code = STATEFP,
-         State_Abbr = STUSPS,
+         State_Abbr = STUSPS.x,
          SA_Code = GEOID) %>%
+  select(-c(STUSPS.y, NAMELSADCO, STATE_NAME, )) %>%
   mutate(SA_Name = NA_character_,
          Country_Code = "US") %>%
   mutate(across(c(State_Code, County_Code, MSA_Code, SA_Code), as.double)) %>%
