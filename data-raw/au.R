@@ -26,17 +26,19 @@ res <- tryCatch(download.file(url_popn, fpath_popn), error = function(e) 1)
 
 # Set up the column names and column types from the downloaded file
 # Note skipping columns that are blank or we are ignoring
-col_names = c("State_Code", "State_Name"               )
+col_names = c("State_Code", "State_Name"                )
 col_types = c("numeric",    "text",       "skip", "skip")
 
-col_names = c(col_names, "County_Code", "County_Name"               )
-col_types = c(col_types, "numeric",     "text",        "skip", "skip")
+col_names = c(col_names,                               )
+col_types = c(col_types, "skip", "skip", "skip", "skip")
 
 col_names = c(col_names, "SA_Code", "SA_Name",      "Popn_Est")
 col_types = c(col_types, "numeric", "text", "skip", "numeric")
+
+col_names = c(col_names,                                               )
 col_types = c(col_types, "skip", "skip", "skip", "skip", "skip", "skip")
 
-col_names = c(col_names,                 "Area_km2")
+col_names = c(col_names,                 "Area_km2"       )
 col_types = c(col_types, "skip", "skip", "numeric", "skip")
 
 # Read in the data and iterate through the relevant tabs
@@ -64,9 +66,13 @@ au <- au %>%
            State_Code == 6 ~ "TAS",
            State_Code == 7 ~ "NT",
            State_Code == 8 ~ "ACT",
-         )) %>%
+         ),
+         County_Code = NA_character_,
+         County_Code = as.numeric(County_Code),
+         County_Name = NA_character_) %>%
   relocate(Country_Code, .before = State_Code) %>%
-  relocate(State_Abbr, .before = State_Name)
+  relocate(State_Abbr, .before = State_Name)%>%
+  relocate(County_Code, County_Name, .after = State_Name)
 
 # Now get the SA2 to SUA mapping logic
 fname_sa2_sua <- "1270055004_sa2_sua_2016_aust_csv.zip"
