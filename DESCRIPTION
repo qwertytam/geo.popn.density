@@ -6,12 +6,19 @@ Authors@R:
 Description: Finds the population densities for selected countries. Gets and
     wrangles the underlying source data, then calculates simple and weighted
     averge densities.
-License: `use_mit_license()`
+License: MIT
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.0.0
+RoxygenNote: 7.2.0
 URL: https://github.com/qwertytam/geo_popn_density
 BugReports: https://github.com/qwertytam/geo_popn_density/issues
 Depends: 
     R (>= 2.10)
 LazyData: true
+Imports:
+    dplyr,
+    forcats,
+    ggplot2,
+    magrittr,
+    rlang,
+    scales,
