@@ -1,51 +1,52 @@
-#' Australian population and population densities at the SA2 level.
-#' Each row is a population estimate, area and population density for a SA2.
+#' Data for Australian
+#' Population and population densities at the ABS SA2 level
 #'
 #' This dataset was produced from Australian Bureau of Statistics data
-#'  available from  \url{https://www.abs.gov.au/}.
+#'  available from  \url{https://www.abs.gov.au/}. See the references section
+#'  in the readme for further detail on Australian data and definitions.
 #'
-#' @format A data frame with 2288 rows and 15 variables:
+#' @format A data frame with 2288 rows and 14 variables:
 #' \describe{
-#'   \item{State_Code}{State code}
+#'   \item{Country_Code}{Upper case ISO 3166 code}
+#'   \item{State_Code}{ABS state code}
+#'   \item{State_Abbr}{2 or 3 letter state abbreviation}
 #'   \item{State_Name}{State name}
-#'   \item{GCCSA_Code}{Greater Capital City Statistical Area code}
-#'   \item{GCCSA_Name}{GCCSA name}
-#'   \item{S4_Code}{Statistical Area level 4 code}
-#'   \item{S4_Name}{Statistical Area level 4 name}
-#'   \item{S3_Code}{Statistical Area level 3 code}
-#'   \item{S3_Name}{Statistical Area level 3 name}
-#'   \item{SUA_Code}{Significant Urban Area code}
-#'   \item{SUA_Name}{SUA name}
-#'   \item{S2_Code}{Statistical Area level 2 code}
-#'   \item{S2_Name}{Statistical Area level 2 name}
+#'   \item{County_Code}{County code - `NA` for AU data}
+#'   \item{County_Name}{County name - `NA` for AU data}
+#'   \item{MSA_Code}{ABS significant urban area code}
+#'   \item{MSA_Name}{ABS significant urban area name}
+#'   \item{Metro_Micro}{`Metro` if a metropolitan area, `NA` otherwise}
+#'   \item{SA_Code}{ABS statistical area level 2 code}
+#'   \item{SA_Name}{ABS statistical area level 2 name}
 #'   \item{Popn_Est}{Population estimate, currenlty for 2021}
-#'   \item{Area_km2}{Area of the relevant SA2}
+#'   \item{Area_km2}{Area of the relevant statistical area}
 #'   \item{Density}{Derived density}
 #' }
 #'
 "au"
 
-#' US population and population densities at the census 'block group' level.
-#' Each row is a population estimate, area and population density for a census
-#' block group.
-#'
+#' Data for the United States
+#' 
+#' US population and population densities at the census 'tract' level.
+#' 
 #' This dataset was produced from US Census Bureau data
 #'  available from  \url{https://www.census.gov/"/}.
 #'
-#' @format A data frame with 241898 rows and 12 variables:
+#' @format A data frame with 85062 rows and 14 variables:
 #' \describe{
-#'   \item{State_FIPS}{State code}
+#'   \item{Country_Code}{Upper case ISO 3166 code}
+#'   \item{State_Code}{State FIPS code}
 #'   \item{State_Abbr}{Two letter USPS state abbreviation}
 #'   \item{State_Name}{State name}
-#'   \item{County_FIPS}{County or equivalent FIPS code}
+#'   \item{County_Code}{County or equivalent FIPS code}
 #'   \item{County_Name}{County or equivalent name}
-#'   \item{CBSA_Code}{Core Based Statistical Area code}
-#'   \item{CBSA_Node}{Core Based Statistical Area name}
-#'   \item{Metro_Micro}{If the block group is in a metro or micropolitan area}
-#'   \item{S3_Name}{Statistical Area level 3 name}
-#'   \item{GEOID}{GEOID of block group?}
+#'   \item{MSA_Code}{Core based statistical area code}
+#'   \item{MSA_Name}{Core based statistical area name}
+#'   \item{Metro_Micro}{If the tract is in a metro or micropolitan area}
+#'   \item{SA_Code}{GEOID of tract}
+#'   \item{SA_Name}{Name of the tract}
 #'   \item{Popn_Est}{Population estimate, currenlty from the 2020 census}
-#'   \item{Area_km2}{Area of the relevant block group}
+#'   \item{Area_km2}{Area of the relevant tract}
 #'   \item{Density}{Derived density}
 #' }
 #'
