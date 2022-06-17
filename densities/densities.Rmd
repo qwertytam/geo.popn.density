@@ -1,43 +1,109 @@
 ---
-title: "R Notebook"
-output: html_notebook
+title: "Population Densities - Comparing Across (Selected) Countries"
+output:
+  html_document:
+    df_print: paged
+  html_notebook: default
+  pdf_document: default
+keep_md: true
 ---
 
-This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+## Notebook Summary 
+This notebook looks at population density metrics for a set of selected countries.
+The basic flow is reading in the data, some data manipulation, then reviewing
+various plots.
 
-Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+Current countries in the data source:
+- Australia
+- United States of America
+
+---
+  
+### 1. Initialize and Read in the Data
+Data is sourced from the relevant national statistical agencies and gathered
+using scripts in the `data-raw` directory with results stored as `csv` files in
+the `inst/extdata` directory and as `rda` files in the `data` directory.
 
 ```{r}
-plot(cars)
+# Load library for successful knit
+library(geo.popn.density)
 
-all_countries <- GetAllData()
+# Set up variables we will reuse in the notebook
+ccode = "Country_Code"
+msa_name = "MSA_Name"
+ppn_est = "Popn_Est"
+area = "Area_km2"
+density = "Density"
+ppn_pct = "Perc_Popn"
+cum_pct = "Cum_Popn_Perc"
+method = "method"
 
-avgw_densities <- CalcAvgWDensities(all_countries)
-
-allc_by_density <- AllDataDscDensity(all_countries)
-
-mdn_sa <- FindMedianSAbyDensity(allc_by_density)
-
-msas <- GroupbyMSA(all_countries)
-
-msas_by_popn <- ArrangeMSAsbyPopn(msas)
-
-msas_by_density <- ArrangeMSAsbyDensity(msas)
-
-mdn_msa <- FindMedianMSAbyPopulation(msas_by_popn)
-
-mdn_msa_occurence <- FindMedianMSAOccurencebyDensity(msas_by_density)
-
+# Get the data
+all_data <- GetAllData()
 ```
 
-Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
-
-When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
-
-The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+### 2. Data Review
+#### 2.1 Density Calculations by Country
 ```{r}
-PlotAvgWDensities(avgw_densities)
-PlotAllDataByDensity(allc_by_density)
-
+densities <- CalcDensities(all_data, ccode = ccode, ppn_est = ppn_est,
+                               area = area, density = density, group_by = ccode)
+PlotDensities(densities, density = density, ccode = ccode)
 ```
+
+#### 2.2 The Median Statistical Area by Density
+```{r}
+# Sorting the data by descending data and calculating the cumulative percentage population to find the median
+all_by_density <- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
+mdn_sa <- FindMedian(all_by_density, cum_pct = cum_pct)
+dplyr::select(mdn_sa, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+```
+
+#### 2.3 Statistical Areas by Descending Density
+```{r}
+PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
+```
+
+#### 2.4 The Median Metropolitan Area by Population
+```{r}
+# Group the data into its metropolitan statistical areas
+msas <- GroupData(all_data, ppn_est = ppn_est, area = area, ppn_pct = ppn_pct,
+                  density = density,
+                  group_by = c(ccode, "MSA_Code", msa_name, "Metro_Micro"))
+
+# Sort by population descending
+msas_by_popn <- SortMSAsbyPopn(msas, cum_pct = cum_pct, ppn_est = ppn_est, ppn_pct = ppn_pct, msa_name = msa_name, group_by = ccode)
+mdn_msa_popn <- FindMedian(msas_by_popn, cum_pct = cum_pct)
+dplyr::select(mdn_msa_popn, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+```
+
+#### 2.5 Metroplitan Areas by Descending Population
+```{r}
+PlotMSAsByPopn(msas_by_popn, ppn_est = ppn_est, ccode = ccode, cum_pct = cum_pct)
+```
+
+#### 2.6 The Median Metropolitan Area by Simple Density
+```{r}
+msas_by_density <- SortMSAsbyDensity(msas, cum_pct = cum_pct, density = density, ppn_pct = ppn_pct, group_by = ccode)
+mdn_msa_density <- FindMedian(msas_by_density, cum_pct = cum_pct)
+dplyr::select(mdn_msa_density, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+```
+
+#### 2.7 Metropolitan Areas by Descending Simple Density
+```{r}
+PlotMSAsByDensity(msas_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
+```
+
+## Source Data
+### Australia
+Data sourced from the Australian Bureau of Statistics. Population data sourced
+at the Statistical Area 2 level. See references below for further detail on
+Australian statistical geographic standards. Density is given by the ABS but
+is recalculated here as the population-area-density numbers do not line up as
+given. Data is output to `au.csv` in the data directory.
+
+#### References:
+* [Description of the Australian Statistical Geography Standard](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram)
+* [ABS population data by SA2](https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download)
+* [Significant Urban Area to SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
+
 
