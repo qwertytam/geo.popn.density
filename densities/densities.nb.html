@@ -1827,12 +1827,108 @@ all_data &lt;- GetAllData()</code></pre>
 <!-- rnb-plot-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="the-median-statistical-area-by-density" class="section level4">
+<h4>2.2 The Median Statistical Area by Density</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBTb3J0aW5nIHRoZSBkYXRhIGJ5IGRlc2NlbmRpbmcgZGF0YSBhbmQgY2FsY3VsYXRpbmcgdGhlIGN1bXVsYXRpdmUgcGVyY2VudGFnZSBwb3B1bGF0aW9uIHRvIGZpbmQgdGhlIG1lZGlhblxuYWxsX2J5X2RlbnNpdHkgPC0gQ2FsY0N1bVBlcmNlbnQoYWxsX2RhdGEsIGN1bV9wY3QgPSBjdW1fcGN0LCBtZXRyaWMgPSBwcG5fZXN0LCBzb3J0X2J5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSlcbm1kbl9zYSA8LSBGaW5kTWVkaWFuKGFsbF9ieV9kZW5zaXR5LCBjdW1fcGN0ID0gY3VtX3BjdClcbmRwbHlyOjpzZWxlY3QobWRuX3NhLCBTdGF0ZV9BYmJyLCBNU0FfTmFtZSwgU0FfQ29kZSwgUG9wbl9Fc3QsIEFyZWFfa20yLCBEZW5zaXR5LCBDdW1fUG9wbl9QZXJjKVxuYGBgIn0= -->
+<pre class="r"><code># Sorting the data by descending data and calculating the cumulative percentage population to find the median
+all_by_density &lt;- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
+mdn_sa &lt;- FindMedian(all_by_density, cum_pct = cum_pct)
+dplyr::select(mdn_sa, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="statistical-areas-by-descending-density" class="section level4">
+<h4>2.3 Statistical Areas by Descending Density</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUGxvdEFsbERhdGFCeURlbnNpdHkoYWxsX2J5X2RlbnNpdHksIGRlbnNpdHkgPSBkZW5zaXR5LCBjY29kZSA9IGNjb2RlLCBjdW1fcGN0ID0gY3VtX3BjdClcbmBgYCJ9 -->
+<pre class="r"><code>PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="the-median-metropolitan-area-by-population" class="section level4">
+<h4>2.4 The Median Metropolitan Area by Population</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBHcm91cCB0aGUgZGF0YSBpbnRvIGl0cyBtZXRyb3BvbGl0YW4gc3RhdGlzdGljYWwgYXJlYXNcbm1zYXMgPC0gR3JvdXBEYXRhKGFsbF9kYXRhLCBwcG5fZXN0ID0gcHBuX2VzdCwgYXJlYSA9IGFyZWEsIHBwbl9wY3QgPSBwcG5fcGN0LFxuICAgICAgICAgICAgICAgICAgZGVuc2l0eSA9IGRlbnNpdHksXG4gICAgICAgICAgICAgICAgICBncm91cF9ieSA9IGMoY2NvZGUsIFwiTVNBX0NvZGVcIiwgbXNhX25hbWUsIFwiTWV0cm9fTWljcm9cIikpXG5cbiMgU29ydCBieSBwb3B1bGF0aW9uIGRlc2NlbmRpbmdcbm1zYXNfYnlfcG9wbiA8LSBTb3J0TVNBc2J5UG9wbihtc2FzLCBjdW1fcGN0ID0gY3VtX3BjdCwgcHBuX2VzdCA9IHBwbl9lc3QsIHBwbl9wY3QgPSBwcG5fcGN0LCBtc2FfbmFtZSA9IG1zYV9uYW1lLCBncm91cF9ieSA9IGNjb2RlKVxubWRuX21zYV9wb3BuIDwtIEZpbmRNZWRpYW4obXNhc19ieV9wb3BuLCBjdW1fcGN0ID0gY3VtX3BjdClcbmRwbHlyOjpzZWxlY3QobWRuX21zYV9wb3BuLCBNU0FfTmFtZSwgUG9wbl9Fc3QsIEFyZWFfa20yLCBEZW5zaXR5LCBDdW1fUG9wbl9QZXJjKVxuYGBgIn0= -->
+<pre class="r"><code># Group the data into its metropolitan statistical areas
+msas &lt;- GroupData(all_data, ppn_est = ppn_est, area = area, ppn_pct = ppn_pct,
+                  density = density,
+                  group_by = c(ccode, &quot;MSA_Code&quot;, msa_name, &quot;Metro_Micro&quot;))
+
+# Sort by population descending
+msas_by_popn &lt;- SortMSAsbyPopn(msas, cum_pct = cum_pct, ppn_est = ppn_est, ppn_pct = ppn_pct, msa_name = msa_name, group_by = ccode)
+mdn_msa_popn &lt;- FindMedian(msas_by_popn, cum_pct = cum_pct)
+dplyr::select(mdn_msa_popn, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="metroplitan-areas-by-descending-population" class="section level4">
+<h4>2.5 Metroplitan Areas by Descending Population</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUGxvdE1TQXNCeVBvcG4obXNhc19ieV9wb3BuLCBwcG5fZXN0ID0gcHBuX2VzdCwgY2NvZGUgPSBjY29kZSwgY3VtX3BjdCA9IGN1bV9wY3QpXG5gYGAifQ== -->
+<pre class="r"><code>PlotMSAsByPopn(msas_by_popn, ppn_est = ppn_est, ccode = ccode, cum_pct = cum_pct)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="the-median-metropolitan-area-by-simple-density" class="section level4">
+<h4>2.6 The Median Metropolitan Area by Simple Density</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubXNhc19ieV9kZW5zaXR5IDwtIFNvcnRNU0FzYnlEZW5zaXR5KG1zYXMsIGN1bV9wY3QgPSBjdW1fcGN0LCBkZW5zaXR5ID0gZGVuc2l0eSwgcHBuX3BjdCA9IHBwbl9wY3QsIGdyb3VwX2J5ID0gY2NvZGUpXG5tZG5fbXNhX2RlbnNpdHkgPC0gRmluZE1lZGlhbihtc2FzX2J5X2RlbnNpdHksIGN1bV9wY3QgPSBjdW1fcGN0KVxuZHBseXI6OnNlbGVjdChtZG5fbXNhX2RlbnNpdHksIE1TQV9OYW1lLCBQb3BuX0VzdCwgQXJlYV9rbTIsIERlbnNpdHksIEN1bV9Qb3BuX1BlcmMpXG5gYGAifQ== -->
+<pre class="r"><code>msas_by_density &lt;- SortMSAsbyDensity(msas, cum_pct = cum_pct, density = density, ppn_pct = ppn_pct, group_by = ccode)
+mdn_msa_density &lt;- FindMedian(msas_by_density, cum_pct = cum_pct)
+dplyr::select(mdn_msa_density, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+<div id="metropolitan-areas-by-descending-simple-density" class="section level4">
+<h4>2.7 Metropolitan Areas by Descending Simple Density</h4>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuUGxvdE1TQXNCeURlbnNpdHkobXNhc19ieV9kZW5zaXR5LCBkZW5zaXR5ID0gZGVuc2l0eSwgY2NvZGUgPSBjY29kZSwgY3VtX3BjdCA9IGN1bV9wY3QpXG5gYGAifQ== -->
+<pre class="r"><code>PlotMSAsByDensity(msas_by_density, density = density, ccode = ccode, cum_pct = cum_pct)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+</div>
+</div>
+</div>
+<div id="source-data" class="section level2">
+<h2>Source Data</h2>
+<div id="australia" class="section level3">
+<h3>Australia</h3>
+<p>Data sourced from the Australian Bureau of Statistics. Population
+data sourced at the Statistical Area 2 level. See references below for
+further detail on Australian statistical geographic standards. Density
+is given by the ABS but is recalculated here as the
+population-area-density numbers do not line up as given. Data is output
+to <code>au.csv</code> in the data directory.</p>
+<div id="references" class="section level4">
+<h4>References:</h4>
+<ul>
+<li><a href="https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram">Description
+of the Australian Statistical Geography Standard</a></li>
+<li><a href="https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download">ABS
+population data by SA2</a></li>
+<li><a href="https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument">Significant
+Urban Area to SA2</a></li>
+</ul>
 <!-- rnb-text-end -->
 </div>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBvcHVsYXRpb24gRGVuc2l0aWVzIC0gQ29tcGFyaW5nIEFjcm9zcyAoU2VsZWN0ZWQpIENvdW50cmllcyINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICBkZl9wcmludDogcGFnZWQNCiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdA0KICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQNCmtlZXBfbWQ6IHRydWUNCi0tLQ0KDQojIyBOb3RlYm9vayBTdW1tYXJ5IA0KVGhpcyBub3RlYm9vayBsb29rcyBhdCBwb3B1bGF0aW9uIGRlbnNpdHkgbWV0cmljcyBmb3IgYSBzZXQgb2Ygc2VsZWN0ZWQgY291bnRyaWVzLg0KVGhlIGJhc2ljIGZsb3cgaXMgcmVhZGluZyBpbiB0aGUgZGF0YSwgc29tZSBkYXRhIG1hbmlwdWxhdGlvbiwgdGhlbiByZXZpZXdpbmcNCnZhcmlvdXMgcGxvdHMuDQoNCkN1cnJlbnQgY291bnRyaWVzIGluIHRoZSBkYXRhIHNvdXJjZToNCi0gQXVzdHJhbGlhDQotIFVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYQ0KDQotLS0NCiAgDQojIyMgMS4gSW5pdGlhbGl6ZSBhbmQgUmVhZCBpbiB0aGUgRGF0YQ0KRGF0YSBpcyBzb3VyY2VkIGZyb20gdGhlIHJlbGV2YW50IG5hdGlvbmFsIHN0YXRpc3RpY2FsIGFnZW5jaWVzIGFuZCBnYXRoZXJlZA0KdXNpbmcgc2NyaXB0cyBpbiB0aGUgYGRhdGEtcmF3YCBkaXJlY3Rvcnkgd2l0aCByZXN1bHRzIHN0b3JlZCBhcyBgY3N2YCBmaWxlcyBpbg0KdGhlIGBpbnN0L2V4dGRhdGFgIGRpcmVjdG9yeSBhbmQgYXMgYHJkYWAgZmlsZXMgaW4gdGhlIGBkYXRhYCBkaXJlY3RvcnkuDQoNCmBgYHtyfQ0KIyBMb2FkIGxpYnJhcnkgZm9yIHN1Y2Nlc3NmdWwga25pdA0KbGlicmFyeShnZW8ucG9wbi5kZW5zaXR5KQ0KDQojIFNldCB1cCB2YXJpYWJsZXMgd2Ugd2lsbCByZXVzZSBpbiB0aGUgbm90ZWJvb2sNCmNjb2RlID0gIkNvdW50cnlfQ29kZSINCm1zYV9uYW1lID0gIk1TQV9OYW1lIg0KcHBuX2VzdCA9ICJQb3BuX0VzdCINCmFyZWEgPSAiQXJlYV9rbTIiDQpkZW5zaXR5ID0gIkRlbnNpdHkiDQpwcG5fcGN0ID0gIlBlcmNfUG9wbiINCmN1bV9wY3QgPSAiQ3VtX1BvcG5fUGVyYyINCm1ldGhvZCA9ICJtZXRob2QiDQoNCiMgR2V0IHRoZSBkYXRhDQphbGxfZGF0YSA8LSBHZXRBbGxEYXRhKCkNCmBgYA0KDQojIyMgMi4gRGF0YSBSZXZpZXcNCiMjIyMgMi4xIERlbnNpdHkgQ2FsY3VsYXRpb25zIGJ5IENvdW50cnkNCmBgYHtyfQ0KZGVuc2l0aWVzIDwtIENhbGNEZW5zaXRpZXMoYWxsX2RhdGEsIGNjb2RlID0gY2NvZGUsIHBwbl9lc3QgPSBwcG5fZXN0LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFyZWEgPSBhcmVhLCBkZW5zaXR5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSkNClBsb3REZW5zaXRpZXMoZGVuc2l0aWVzLCBkZW5zaXR5ID0gZGVuc2l0eSwgY2NvZGUgPSBjY29kZSkNCmBgYA0KDQo=</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBvcHVsYXRpb24gRGVuc2l0aWVzIC0gQ29tcGFyaW5nIEFjcm9zcyAoU2VsZWN0ZWQpIENvdW50cmllcyINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICBkZl9wcmludDogcGFnZWQNCiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdA0KICBwZGZfZG9jdW1lbnQ6IGRlZmF1bHQNCmtlZXBfbWQ6IHRydWUNCi0tLQ0KDQojIyBOb3RlYm9vayBTdW1tYXJ5IA0KVGhpcyBub3RlYm9vayBsb29rcyBhdCBwb3B1bGF0aW9uIGRlbnNpdHkgbWV0cmljcyBmb3IgYSBzZXQgb2Ygc2VsZWN0ZWQgY291bnRyaWVzLg0KVGhlIGJhc2ljIGZsb3cgaXMgcmVhZGluZyBpbiB0aGUgZGF0YSwgc29tZSBkYXRhIG1hbmlwdWxhdGlvbiwgdGhlbiByZXZpZXdpbmcNCnZhcmlvdXMgcGxvdHMuDQoNCkN1cnJlbnQgY291bnRyaWVzIGluIHRoZSBkYXRhIHNvdXJjZToNCi0gQXVzdHJhbGlhDQotIFVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYQ0KDQotLS0NCiAgDQojIyMgMS4gSW5pdGlhbGl6ZSBhbmQgUmVhZCBpbiB0aGUgRGF0YQ0KRGF0YSBpcyBzb3VyY2VkIGZyb20gdGhlIHJlbGV2YW50IG5hdGlvbmFsIHN0YXRpc3RpY2FsIGFnZW5jaWVzIGFuZCBnYXRoZXJlZA0KdXNpbmcgc2NyaXB0cyBpbiB0aGUgYGRhdGEtcmF3YCBkaXJlY3Rvcnkgd2l0aCByZXN1bHRzIHN0b3JlZCBhcyBgY3N2YCBmaWxlcyBpbg0KdGhlIGBpbnN0L2V4dGRhdGFgIGRpcmVjdG9yeSBhbmQgYXMgYHJkYWAgZmlsZXMgaW4gdGhlIGBkYXRhYCBkaXJlY3RvcnkuDQoNCmBgYHtyfQ0KIyBMb2FkIGxpYnJhcnkgZm9yIHN1Y2Nlc3NmdWwga25pdA0KbGlicmFyeShnZW8ucG9wbi5kZW5zaXR5KQ0KDQojIFNldCB1cCB2YXJpYWJsZXMgd2Ugd2lsbCByZXVzZSBpbiB0aGUgbm90ZWJvb2sNCmNjb2RlID0gIkNvdW50cnlfQ29kZSINCm1zYV9uYW1lID0gIk1TQV9OYW1lIg0KcHBuX2VzdCA9ICJQb3BuX0VzdCINCmFyZWEgPSAiQXJlYV9rbTIiDQpkZW5zaXR5ID0gIkRlbnNpdHkiDQpwcG5fcGN0ID0gIlBlcmNfUG9wbiINCmN1bV9wY3QgPSAiQ3VtX1BvcG5fUGVyYyINCm1ldGhvZCA9ICJtZXRob2QiDQoNCiMgR2V0IHRoZSBkYXRhDQphbGxfZGF0YSA8LSBHZXRBbGxEYXRhKCkNCmBgYA0KDQojIyMgMi4gRGF0YSBSZXZpZXcNCiMjIyMgMi4xIERlbnNpdHkgQ2FsY3VsYXRpb25zIGJ5IENvdW50cnkNCmBgYHtyfQ0KZGVuc2l0aWVzIDwtIENhbGNEZW5zaXRpZXMoYWxsX2RhdGEsIGNjb2RlID0gY2NvZGUsIHBwbl9lc3QgPSBwcG5fZXN0LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFyZWEgPSBhcmVhLCBkZW5zaXR5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSkNClBsb3REZW5zaXRpZXMoZGVuc2l0aWVzLCBkZW5zaXR5ID0gZGVuc2l0eSwgY2NvZGUgPSBjY29kZSkNCmBgYA0KDQojIyMjIDIuMiBUaGUgTWVkaWFuIFN0YXRpc3RpY2FsIEFyZWEgYnkgRGVuc2l0eQ0KYGBge3J9DQojIFNvcnRpbmcgdGhlIGRhdGEgYnkgZGVzY2VuZGluZyBkYXRhIGFuZCBjYWxjdWxhdGluZyB0aGUgY3VtdWxhdGl2ZSBwZXJjZW50YWdlIHBvcHVsYXRpb24gdG8gZmluZCB0aGUgbWVkaWFuDQphbGxfYnlfZGVuc2l0eSA8LSBDYWxjQ3VtUGVyY2VudChhbGxfZGF0YSwgY3VtX3BjdCA9IGN1bV9wY3QsIG1ldHJpYyA9IHBwbl9lc3QsIHNvcnRfYnkgPSBkZW5zaXR5LCBncm91cF9ieSA9IGNjb2RlKQ0KbWRuX3NhIDwtIEZpbmRNZWRpYW4oYWxsX2J5X2RlbnNpdHksIGN1bV9wY3QgPSBjdW1fcGN0KQ0KZHBseXI6OnNlbGVjdChtZG5fc2EsIFN0YXRlX0FiYnIsIE1TQV9OYW1lLCBTQV9Db2RlLCBQb3BuX0VzdCwgQXJlYV9rbTIsIERlbnNpdHksIEN1bV9Qb3BuX1BlcmMpDQpgYGANCg0KIyMjIyAyLjMgU3RhdGlzdGljYWwgQXJlYXMgYnkgRGVzY2VuZGluZyBEZW5zaXR5DQpgYGB7cn0NClBsb3RBbGxEYXRhQnlEZW5zaXR5KGFsbF9ieV9kZW5zaXR5LCBkZW5zaXR5ID0gZGVuc2l0eSwgY2NvZGUgPSBjY29kZSwgY3VtX3BjdCA9IGN1bV9wY3QpDQpgYGANCg0KIyMjIyAyLjQgVGhlIE1lZGlhbiBNZXRyb3BvbGl0YW4gQXJlYSBieSBQb3B1bGF0aW9uDQpgYGB7cn0NCiMgR3JvdXAgdGhlIGRhdGEgaW50byBpdHMgbWV0cm9wb2xpdGFuIHN0YXRpc3RpY2FsIGFyZWFzDQptc2FzIDwtIEdyb3VwRGF0YShhbGxfZGF0YSwgcHBuX2VzdCA9IHBwbl9lc3QsIGFyZWEgPSBhcmVhLCBwcG5fcGN0ID0gcHBuX3BjdCwNCiAgICAgICAgICAgICAgICAgIGRlbnNpdHkgPSBkZW5zaXR5LA0KICAgICAgICAgICAgICAgICAgZ3JvdXBfYnkgPSBjKGNjb2RlLCAiTVNBX0NvZGUiLCBtc2FfbmFtZSwgIk1ldHJvX01pY3JvIikpDQoNCiMgU29ydCBieSBwb3B1bGF0aW9uIGRlc2NlbmRpbmcNCm1zYXNfYnlfcG9wbiA8LSBTb3J0TVNBc2J5UG9wbihtc2FzLCBjdW1fcGN0ID0gY3VtX3BjdCwgcHBuX2VzdCA9IHBwbl9lc3QsIHBwbl9wY3QgPSBwcG5fcGN0LCBtc2FfbmFtZSA9IG1zYV9uYW1lLCBncm91cF9ieSA9IGNjb2RlKQ0KbWRuX21zYV9wb3BuIDwtIEZpbmRNZWRpYW4obXNhc19ieV9wb3BuLCBjdW1fcGN0ID0gY3VtX3BjdCkNCmRwbHlyOjpzZWxlY3QobWRuX21zYV9wb3BuLCBNU0FfTmFtZSwgUG9wbl9Fc3QsIEFyZWFfa20yLCBEZW5zaXR5LCBDdW1fUG9wbl9QZXJjKQ0KYGBgDQoNCiMjIyMgMi41IE1ldHJvcGxpdGFuIEFyZWFzIGJ5IERlc2NlbmRpbmcgUG9wdWxhdGlvbg0KYGBge3J9DQpQbG90TVNBc0J5UG9wbihtc2FzX2J5X3BvcG4sIHBwbl9lc3QgPSBwcG5fZXN0LCBjY29kZSA9IGNjb2RlLCBjdW1fcGN0ID0gY3VtX3BjdCkNCmBgYA0KDQojIyMjIDIuNiBUaGUgTWVkaWFuIE1ldHJvcG9saXRhbiBBcmVhIGJ5IFNpbXBsZSBEZW5zaXR5DQpgYGB7cn0NCm1zYXNfYnlfZGVuc2l0eSA8LSBTb3J0TVNBc2J5RGVuc2l0eShtc2FzLCBjdW1fcGN0ID0gY3VtX3BjdCwgZGVuc2l0eSA9IGRlbnNpdHksIHBwbl9wY3QgPSBwcG5fcGN0LCBncm91cF9ieSA9IGNjb2RlKQ0KbWRuX21zYV9kZW5zaXR5IDwtIEZpbmRNZWRpYW4obXNhc19ieV9kZW5zaXR5LCBjdW1fcGN0ID0gY3VtX3BjdCkNCmRwbHlyOjpzZWxlY3QobWRuX21zYV9kZW5zaXR5LCBNU0FfTmFtZSwgUG9wbl9Fc3QsIEFyZWFfa20yLCBEZW5zaXR5LCBDdW1fUG9wbl9QZXJjKQ0KYGBgDQoNCiMjIyMgMi43IE1ldHJvcG9saXRhbiBBcmVhcyBieSBEZXNjZW5kaW5nIFNpbXBsZSBEZW5zaXR5DQpgYGB7cn0NClBsb3RNU0FzQnlEZW5zaXR5KG1zYXNfYnlfZGVuc2l0eSwgZGVuc2l0eSA9IGRlbnNpdHksIGNjb2RlID0gY2NvZGUsIGN1bV9wY3QgPSBjdW1fcGN0KQ0KYGBgDQoNCiMjIFNvdXJjZSBEYXRhDQojIyMgQXVzdHJhbGlhDQpEYXRhIHNvdXJjZWQgZnJvbSB0aGUgQXVzdHJhbGlhbiBCdXJlYXUgb2YgU3RhdGlzdGljcy4gUG9wdWxhdGlvbiBkYXRhIHNvdXJjZWQNCmF0IHRoZSBTdGF0aXN0aWNhbCBBcmVhIDIgbGV2ZWwuIFNlZSByZWZlcmVuY2VzIGJlbG93IGZvciBmdXJ0aGVyIGRldGFpbCBvbg0KQXVzdHJhbGlhbiBzdGF0aXN0aWNhbCBnZW9ncmFwaGljIHN0YW5kYXJkcy4gRGVuc2l0eSBpcyBnaXZlbiBieSB0aGUgQUJTIGJ1dA0KaXMgcmVjYWxjdWxhdGVkIGhlcmUgYXMgdGhlIHBvcHVsYXRpb24tYXJlYS1kZW5zaXR5IG51bWJlcnMgZG8gbm90IGxpbmUgdXAgYXMNCmdpdmVuLiBEYXRhIGlzIG91dHB1dCB0byBgYXUuY3N2YCBpbiB0aGUgZGF0YSBkaXJlY3RvcnkuDQoNCiMjIyMgUmVmZXJlbmNlczoNCiogW0Rlc2NyaXB0aW9uIG9mIHRoZSBBdXN0cmFsaWFuIFN0YXRpc3RpY2FsIEdlb2dyYXBoeSBTdGFuZGFyZF0oaHR0cHM6Ly93d3cuYWJzLmdvdi5hdS9zdGF0aXN0aWNzL3N0YW5kYXJkcy9hdXN0cmFsaWFuLXN0YXRpc3RpY2FsLWdlb2dyYXBoeS1zdGFuZGFyZC1hc2dzLWVkaXRpb24tMy9qdWwyMDIxLWp1bjIwMjYjYXNncy1kaWFncmFtKQ0KKiBbQUJTIHBvcHVsYXRpb24gZGF0YSBieSBTQTJdKGh0dHBzOi8vd3d3LmFicy5nb3YuYXUvc3RhdGlzdGljcy9wZW9wbGUvcG9wdWxhdGlvbi9yZWdpb25hbC1wb3B1bGF0aW9uLzIwMjAtMjEjZGF0YS1kb3dubG9hZCkNCiogW1NpZ25pZmljYW50IFVyYmFuIEFyZWEgdG8gU0EyXShodHRwczovL3d3dy5hYnMuZ292LmF1L0FVU1NUQVRTL2Fic0AubnNmL0RldGFpbHNQYWdlLzEyNzAuMC41NS4wMDRKdWx5JTIwMjAxNj9PcGVuRG9jdW1lbnQpDQoNCg0K</div>
 
 
 
