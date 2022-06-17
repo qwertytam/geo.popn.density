@@ -1,9 +1,9 @@
 ---
 title: "Population Densities - Comparing Across (Selected) Countries"
 output:
-  github_document: default
   html_document:
     df_print: paged
+  github_document: default
   html_notebook: default
   pdf_document: default
 keep_md: true
@@ -107,4 +107,5 @@ given. Data is output to `au.csv` in the data directory.
 * [ABS population data by SA2](https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download)
 * [Significant Urban Area to SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
 
+The repo for this code is [here](https://github.com/qwertytam/geo.popn.density)
 

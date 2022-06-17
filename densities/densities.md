@@ -145,3 +145,6 @@ to `au.csv` in the data directory.
     SA2](https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download)
 -   [Significant Urban Area to
     SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
+
+The repo for this code is
+[here](https://github.com/qwertytam/geo.popn.density)
