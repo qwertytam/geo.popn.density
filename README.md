@@ -15,5 +15,5 @@ Clone from GitHub then install into R.
 
 ## Notebooks
 
-See [R
-Notebook](https://github.com/qwertytam/geo.popn.density/blob/master/densities/densities.nb.html)
+See [Notebook exploring data on
+rpubs.com](https://rpubs.com/qwertytam/geo_popn_density)
