@@ -20,5 +20,6 @@ Imports:
     forcats,
     ggplot2,
     magrittr,
+    purrr,
     rlang,
     scales,
