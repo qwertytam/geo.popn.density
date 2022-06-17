@@ -1683,8 +1683,7 @@ PlotDensities(densities, density = density, ccode = ccode)</code></pre>
 <pre class="r"><code># Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density &lt;- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
 mdn_sa &lt;- FindMedian(all_by_density, cum_pct = cum_pct)
-dplyr::select(mdn_sa, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
-<pre><code>## Adding missing grouping variables: `Country_Code`</code></pre>
+dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Country_Code"],"name":[1],"type":["chr"],"align":["left"]},{"label":["State_Abbr"],"name":[2],"type":["chr"],"align":["left"]},{"label":["MSA_Name"],"name":[3],"type":["chr"],"align":["left"]},{"label":["SA_Code"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Popn_Est"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Area_km2"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["Density"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["Cum_Popn_Perc"],"name":[8],"type":["dbl"],"align":["right"]}],"data":[{"1":"AU","2":"QLD","3":"Brisbane","4":"301021007","5":"15813","6":"11.900000","7":"1328.8235","8":"50.03095"},{"1":"US","2":"CO","3":"Denver-Aurora-Lakewood, CO","4":"8059009856","5":"2983","6":"3.409431","7":"874.9261","8":"50.00004"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1706,8 +1705,7 @@ msas &lt;- GroupData(all_data, ppn_est = ppn_est, area = area, ppn_pct = ppn_pct
 # Sort by population descending
 msas_by_popn &lt;- SortMSAsbyPopn(msas, cum_pct = cum_pct, ppn_est = ppn_est, ppn_pct = ppn_pct, msa_name = msa_name, group_by = ccode)
 mdn_msa_popn &lt;- FindMedian(msas_by_popn, cum_pct = cum_pct)
-dplyr::select(mdn_msa_popn, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
-<pre><code>## Adding missing grouping variables: `Country_Code`</code></pre>
+dplyr::select(mdn_msa_popn, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Country_Code"],"name":[1],"type":["chr"],"align":["left"]},{"label":["MSA_Name"],"name":[2],"type":["fct"],"align":["left"]},{"label":["Popn_Est"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Area_km2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Density"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Cum_Popn_Perc"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"AU","2":"Perth","3":"2099533","4":"3531.70","5":"594.4823","6":"56.17716"},{"1":"US","2":"Cincinnati, OH-KY-IN","3":"2256884","4":"11994.15","5":"188.1653","6":"50.45231"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
@@ -1723,8 +1721,7 @@ dplyr::select(mdn_msa_popn, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc
 <h4>2.6 The Median Metropolitan Area by Simple Density</h4>
 <pre class="r"><code>msas_by_density &lt;- SortMSAsbyDensity(msas, cum_pct = cum_pct, density = density, ppn_pct = ppn_pct, group_by = ccode)
 mdn_msa_density &lt;- FindMedian(msas_by_density, cum_pct = cum_pct)
-dplyr::select(mdn_msa_density, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
-<pre><code>## Adding missing grouping variables: `Country_Code`</code></pre>
+dplyr::select(mdn_msa_density, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
 {"columns":[{"label":["Country_Code"],"name":[1],"type":["chr"],"align":["left"]},{"label":["MSA_Name"],"name":[2],"type":["chr"],"align":["left"]},{"label":["Popn_Est"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["Area_km2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["Density"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["Cum_Popn_Perc"],"name":[6],"type":["dbl"],"align":["right"]}],"data":[{"1":"AU","2":"Perth","3":"2099533","4":"3531.700","5":"594.4823","6":"55.69896"},{"1":"US","2":"Fort Wayne, IN","3":"419601","4":"2584.648","5":"162.3435","6":"50.08269"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}

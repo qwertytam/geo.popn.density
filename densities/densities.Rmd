@@ -55,7 +55,7 @@ PlotDensities(densities, density = density, ccode = ccode)
 # Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density <- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
 mdn_sa <- FindMedian(all_by_density, cum_pct = cum_pct)
-dplyr::select(mdn_sa, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
 ```
 
 #### 2.3 Statistical Areas by Descending Density
@@ -73,7 +73,7 @@ msas <- GroupData(all_data, ppn_est = ppn_est, area = area, ppn_pct = ppn_pct,
 # Sort by population descending
 msas_by_popn <- SortMSAsbyPopn(msas, cum_pct = cum_pct, ppn_est = ppn_est, ppn_pct = ppn_pct, msa_name = msa_name, group_by = ccode)
 mdn_msa_popn <- FindMedian(msas_by_popn, cum_pct = cum_pct)
-dplyr::select(mdn_msa_popn, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+dplyr::select(mdn_msa_popn, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
 ```
 
 #### 2.5 Metroplitan Areas by Descending Population
@@ -85,7 +85,7 @@ PlotMSAsByPopn(msas_by_popn, ppn_est = ppn_est, ccode = ccode, cum_pct = cum_pct
 ```{r}
 msas_by_density <- SortMSAsbyDensity(msas, cum_pct = cum_pct, density = density, ppn_pct = ppn_pct, group_by = ccode)
 mdn_msa_density <- FindMedian(msas_by_density, cum_pct = cum_pct)
-dplyr::select(mdn_msa_density, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+dplyr::select(mdn_msa_density, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
 ```
 
 #### 2.7 Metropolitan Areas by Descending Simple Density
