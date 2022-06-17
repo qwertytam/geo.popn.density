@@ -7,12 +7,18 @@
 GetAllData()
 }
 \value{
-A tibble with the same columns of the country data except as follows:
+A tibble with the same columns of the package country data except
+as follows:
 \describe{
+\item{Area_km2}{Only areas with > 0 are kept, all others are excluded}
 \item{MSA_Name}{\code{NA} entries in this column are replaced with \code{Rural}}
+\item{Popn_Est}{All areas with a population of 0 are changed to a population of 1}
 \item{Perc_Popn}{New column with percentage of each countries' population}
+\item{Density}{Updated based on new \code{Popn_Est} figure}
 }
 }
 \description{
-Combines and returns all country data
+\code{Popn_Est} is altered so that all statistical areas are included in all
+density calculations e.g. the \code{geometric} (see \code{?CalcDensities}) calculation
+cannot deal with a density of 0
 }

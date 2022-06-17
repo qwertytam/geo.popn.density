@@ -4,11 +4,21 @@
 \alias{PlotAllDataByDensity}
 \title{Plot pareto chart of density vs. cumulative population}
 \usage{
-PlotAllDataByDensity(allc_by_density)
+PlotAllDataByDensity(
+  allc_by_density,
+  density = "density",
+  ccode = "country_code",
+  cum_pct = "cum_pct"
+)
 }
 \arguments{
-\item{allc_by_density}{A tibble of country data e.g. from
-\code{geo.popn.density::AllDataDscDensity}}
+\item{allc_by_density}{A tibble of country data e.g. from \code{geo.popn.density::AllDataDscDensity}}
+
+\item{density}{Column name that contains the density; default is "density"}
+
+\item{ccode}{Column name that contains the country code; default is "country_code"}
+
+\item{cum_pct}{Column name that contains the cumulative percentage; default is "cum_pct"}
 }
 \description{
 Plot pareto chart of density vs. cumulative population
