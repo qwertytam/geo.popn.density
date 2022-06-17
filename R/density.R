@@ -163,7 +163,7 @@ FindMedian <- function(data, cum_pct = NULL){
     dplyr::mutate(Mdn_diff = eval(sym(cum_pct)) - 50) %>%
     dplyr::filter(.data$Mdn_diff > 0) %>%
     dplyr::slice_min(.data$Mdn_diff) %>%
-    dplyr::select(!(.data$Mdn_diff)) 
+    dplyr::select(!(.data$Mdn_diff))
   
   return(mdn)
 }
@@ -212,12 +212,14 @@ CalcDensities <- function(data,
   }  
   
   
+  # Simple mean
   densities <- data %>%
     dplyr::group_by(!!! syms(ccode)) %>%
     dplyr::summarise(
       "{density}" := sum(eval(sym(ppn_est))) / sum(eval(sym(area)))) %>%
     dplyr::mutate(method = "simple")
   
+  # Arthimetic weighted average
   densities <- data %>%
     dplyr::group_by(!!! syms(ccode)) %>%
     dplyr::summarise(
@@ -226,6 +228,7 @@ CalcDensities <- function(data,
     dplyr::mutate(method = "arthimetic") %>%
     dplyr::bind_rows(densities)
   
+  # Geometric weighted average
   densities <- data %>%
     dplyr::group_by(!!! syms(ccode)) %>%
     dplyr::summarise(
@@ -235,12 +238,20 @@ CalcDensities <- function(data,
     dplyr::mutate(method = "geometric") %>%
     dplyr::bind_rows(densities)
   
-  densities <- data %>%
-    dplyr::group_by(!!! syms(ccode)) %>%
-    dplyr::summarise(
-      "{density}" := stats::median(eval(sym(density)))) %>%
+  # Median by cumulative population
+  data_m <- CalcCumPercent(data,
+                           cum_pct = "cum_popn_pct",
+                           metric = ppn_est,
+                           sort_by = density,
+                           group_by = ccode)
+
+  data_m <- FindMedian(data_m, cum_pct = "cum_popn_pct")
+
+  densities <- data_m %>%
+    dplyr::select(!!! syms(c(ccode, density))) %>%
     dplyr::mutate(method = "median") %>%
-    dplyr::bind_rows(densities)
+    dplyr::bind_rows(densities) %>%
+    dplyr::ungroup()
   
   return(densities)
 }
