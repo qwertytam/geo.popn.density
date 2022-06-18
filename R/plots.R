@@ -155,4 +155,5 @@ PlotMSAsByDensity <- function(msas_by_density,
                   y = bquote(Density (People/km^2)),
                   title = "Metropolitan Statistical Area Density",
                   color = "Country")
+  print("hello test")
 }
