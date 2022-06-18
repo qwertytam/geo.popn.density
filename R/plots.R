@@ -131,7 +131,7 @@ PlotMSAsByPopn <- function(msas_by_popn,
 #'   \item{method}{Calculation density}
 #' }
 #' @importFrom magrittr %>%
-#' @importFrom rlang sym
+#' @importFrom rlang sym .data
 #' @export
 #'
 PlotMSAsByDensity <- function(msas_by_density,
