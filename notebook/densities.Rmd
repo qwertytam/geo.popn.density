@@ -12,7 +12,7 @@ keep_md: true
 ## Notebook Summary 
 This notebook looks at population density metrics for a set of selected countries.
 The basic flow is reading in the data, some data manipulation, then reviewing
-various plots.
+various plots
 
 Current countries in the data source:
 - Australia
