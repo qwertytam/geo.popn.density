@@ -45,7 +45,7 @@ all_data <- GetAllData()
 
 ### 2. Data Review
 #### 2.1 Density Calculations by Country
-```{r by country}
+```{r density by country}
 densities <- CalcDensities(all_data, ccode = ccode, ppn_est = ppn_est,
                                area = area, density = density, group_by = ccode)
 PlotDensities(densities, density = density, ccode = ccode)
