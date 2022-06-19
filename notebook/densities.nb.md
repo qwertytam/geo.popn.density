@@ -5,7 +5,7 @@ Population Densities - Comparing Across (Selected) Countries
 
 This notebook looks at population density metrics for a set of selected
 countries. The basic flow is reading in the data, some data
-manipulation, then reviewing various plots.
+manipulation, then reviewing various plots
 
 Current countries in the data source: - Australia - United States of
 America
@@ -47,7 +47,7 @@ densities <- CalcDensities(all_data, ccode = ccode, ppn_est = ppn_est,
 PlotDensities(densities, density = density, ccode = ccode)
 ```
 
-![](densities_files/figure-gfm/densities%20by%20country-1.png)<!-- -->
+![](densities.nb_files/figure-gfm/by%20country-1.png)<!-- -->
 
 #### 2.2 The Median Statistical Area by Density
 
@@ -72,7 +72,7 @@ dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Are
 PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
 ```
 
-![](densities_files/figure-gfm/SA%20desc%20density-1.png)<!-- -->
+![](densities.nb_files/figure-gfm/SA%20desc%20density-1.png)<!-- -->
 
 #### 2.4 The Median Metropolitan Area by Population
 
@@ -101,7 +101,7 @@ dplyr::select(mdn_msa_popn, Country_Code, MSA_Name, Popn_Est, Area_km2, Density,
 PlotMSAsByPopn(msas_by_popn, ppn_est = ppn_est, ccode = ccode, cum_pct = cum_pct)
 ```
 
-![](densities_files/figure-gfm/MSA%20desc%20popn-1.png)<!-- -->
+![](densities.nb_files/figure-gfm/MSA%20desc%20popn-1.png)<!-- -->
 
 #### 2.6 The Median Metropolitan Area by Simple Density
 
@@ -124,7 +124,7 @@ dplyr::select(mdn_msa_density, Country_Code, MSA_Name, Popn_Est, Area_km2, Densi
 PlotMSAsByDensity(msas_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
 ```
 
-![](densities_files/figure-gfm/MSA%20desc%20density-1.png)<!-- -->
+![](densities.nb_files/figure-gfm/MSA%20desc%20density-1.png)<!-- -->
 
 ## Source Data
 
