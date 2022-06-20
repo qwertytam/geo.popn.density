@@ -6,7 +6,7 @@ Authors@R:
 Description: Finds the population densities for selected countries. Gets and
     wrangles the underlying source data, then calculates simple and weighted
     averge densities.
-License: MIT
+License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.0
