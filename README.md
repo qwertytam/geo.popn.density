@@ -11,7 +11,18 @@ selected countries - currently only Australia and the United States.
 
 ## Installation
 
-Clone from GitHub then install into R.
+Clone from GitHub then install into R e.g. using
+
+    usethis::create_from_github(
+      "https://github.com/qwertytam/geo.popn.density.git",
+      destdir = NULL,
+      fork = NA,
+      rstudio = NULL,
+      open = rlang::is_interactive(),
+      protocol = "https",
+    )
+
+and then `Install and Restart` from the `Build` menu in RStudio.
 
 ## Notebooks
 
