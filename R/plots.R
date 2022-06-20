@@ -35,10 +35,16 @@ PlotDensities <- function(densities,
                        position = ggplot2::position_dodge(0.9),
                        size = 3.5) +
     ggplot2::labs(x = "Weighting Method",
-                  y = bquote(Density (People/km^2)),
+                  y = expression(paste("Density (People/km"^"2)")),
                   title = "Population Density",
-                  fill = "Country") +
-    ggplot2::ylim(0, ylim_max)
+                  fill = "Country",
+                  caption = "Data: abs.gov.au, census.gov") +
+    ggplot2::ylim(0, ylim_max) +
+    ggplot2::theme(axis.title.x = ggplot2::element_text(vjust = -2),
+                   axis.title.y = ggplot2::element_text(vjust = 2),
+                   plot.title = ggplot2::element_text(face = "bold",
+                                                      margin = ggplot2::margin(10, 0, 10, 0),
+                                                      size = 14))
 }
 
 
@@ -75,7 +81,8 @@ PlotAllDataByDensity <- function(allc_by_density,
     ggplot2::labs(x = "Cumulative Percent of Population",
                   y = bquote(Density (People/km^2)),
                   title = "Statistical Area Density",
-                  color = "Country")
+                  color = "Country") +
+    ggplot2::geom_vline(xintercept = c(50))
 }
 
 
