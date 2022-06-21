@@ -27,5 +27,4 @@ and then `Install and Restart` from the `Build` menu in RStudio.
 ## Notebooks
 
 See R Notebook exploring data on
-[rpubs.com](https://rpubs.com/qwertytam/geo_popn_density) or [here on
-Github](https://github.com/qwertytam/geo.popn.density/blob/master/densities/densities.md)
+[rpubs.com](https://rpubs.com/qwertytam/geo_popn_density)
