@@ -19,6 +19,8 @@
 #' @export
 #'
 ShowMedianTable <- function(data, show_cols){
+  imgpath <- "https://raw.githubusercontent.com/qwertytam/geo.popn.density/master/notebook/images/"
+  
   tbl <- data %>%
     dplyr::select(!!! syms(show_cols)) %>%
     reactable::reactable(
@@ -37,7 +39,7 @@ ShowMedianTable <- function(data, show_cols){
               class = "country",
               img(class = "country-flag",
                   alt = paste(value, "flag"),
-                  src = sprintf("images/%s.png", value)),
+                  src = paste(imgpath, value, ".png", sep = "")),
               div(
                 span(class = "country-name", value),
               )
@@ -111,6 +113,8 @@ ShowMedianTable <- function(data, show_cols){
 #' @export
 #'
 ShowCountryTotals <- function(data){
+  imgpath <- "https://raw.githubusercontent.com/qwertytam/geo.popn.density/master/notebook/images/"
+  
   tbl <- data %>%
     dplyr::group_by(.data$Country_Code) %>%
     dplyr::summarise(
@@ -131,7 +135,7 @@ ShowCountryTotals <- function(data){
               class = "country",
               img(class = "country-flag",
                   alt = paste(value, "flag"),
-                  src = sprintf("images/%s.png", value)),
+                  src = paste(imgpath, value, ".png", sep = "")),
               div(
                 span(class = "country-name", value),
               )
@@ -191,6 +195,7 @@ ShowCountryTotals <- function(data){
 #' @export
 #'
 ShowStats <- function(data, group_by = NULL, stat_col){
+  imgpath <- "https://raw.githubusercontent.com/qwertytam/geo.popn.density/master/notebook/images/"
   
   data <- data %>%
     dplyr::ungroup() %>%
@@ -229,7 +234,7 @@ ShowStats <- function(data, group_by = NULL, stat_col){
               class = "country",
               img(class = "country-flag",
                   alt = paste(value, "flag"),
-                  src = sprintf("images/%s.png", value)),
+                  src = paste(imgpath, value, ".png", sep = "")),
               div(
                 span(class = "country-name", value),
               )
