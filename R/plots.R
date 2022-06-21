@@ -37,8 +37,7 @@ PlotDensities <- function(densities,
     ggplot2::labs(x = "Weighting Method",
                   y = expression(paste("Density (People/km"^"2)")),
                   title = "Population Density",
-                  fill = "Country",
-                  caption = "Data: abs.gov.au, census.gov") +
+                  fill = "Country") +
     ggplot2::ylim(0, ylim_max) +
     ggplot2::theme(axis.title.x = ggplot2::element_text(vjust = -2),
                    axis.title.y = ggplot2::element_text(vjust = 2),
