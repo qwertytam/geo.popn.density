@@ -6,6 +6,6 @@ server: rpubs.com
 hostUrl: rpubs.com
 appId: https://api.rpubs.com/api/v1/document/916192/3670733b897a4e5a9820d4e6ca991f07
 bundleId: https://api.rpubs.com/api/v1/document/916192/3670733b897a4e5a9820d4e6ca991f07
-url: http://rpubs.com/qwertytam/916192/edit
-when: 1655606602.65335
-lastSyncTime: 1655606602.65336
+url: http://rpubs.com/qwertytam/916192
+when: 1655764061.07338
+lastSyncTime: 1655764061.07341

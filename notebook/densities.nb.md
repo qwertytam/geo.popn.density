@@ -47,7 +47,7 @@ densities <- CalcDensities(all_data, ccode = ccode, ppn_est = ppn_est,
 PlotDensities(densities, density = density, ccode = ccode)
 ```
 
-![](densities.nb_files/figure-gfm/by%20country-1.png)<!-- -->
+![](densities.nb_files/figure-gfm/density%20by%20country-1.png)<!-- -->
 
 #### 2.2 The Median Statistical Area by Density
 
@@ -55,18 +55,58 @@ PlotDensities(densities, density = density, ccode = ccode)
 # Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density <- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
 mdn_sa <- FindMedian(all_by_density, cum_pct = cum_pct)
-dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+
+tble <- dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
 ```
 
-    ## # A tibble: 2 × 8
-    ## # Groups:   Country_Code [2]
-    ##   Country_Code State_Abbr MSA_Name             SA_Code Popn_Est Area_km2 Density
-    ##   <chr>        <chr>      <chr>                  <dbl>    <dbl>    <dbl>   <dbl>
-    ## 1 AU           QLD        Brisbane              3.01e8    15813    11.9    1329.
-    ## 2 US           CO         Denver-Aurora-Lakew…  8.06e9     2983     3.41    875.
-    ## # … with 1 more variable: Cum_Popn_Perc <dbl>
+``` r
+reactable::reactable(
+  tble,
+  defaultColDef = reactable::colDef(
+    header = function(value) gsub("_", " ", value, fixed = TRUE),
+    align = "center",
+    minWidth = 80,
+  ),
+  columns = list(
+    MSA_Name = reactable::colDef(
+      minWidth = 100
+    ),
+    SA_Code = reactable::colDef(
+      cell = function(value) as.character(value)
+      ,
+      minWidth = 110
+    ),
+    Popn_Est = reactable::colDef(
+      name = "Population Estimate",
+      minWidth = 100,
+      format = reactable::colFormat(digits = 0,
+                                    separators = TRUE,
+                                    locales = "en-GB")
+    ),
+    Area_km2 = reactable::colDef(
+      name = "Area ($km^2$)",
+      format = reactable::colFormat(digits = 2,
+                                    separators = TRUE,
+                                    locales = "en-GB")
+    ),
+    Density = reactable::colDef(
+      format = reactable::colFormat(digits = 2,
+                                    separators = TRUE,
+                                    locales = "en-GB")
+    ),
+    Cum_Popn_Perc = reactable::colDef(
+      name = "Cum. Population %",
+      minWidth = 100,
+      format = reactable::colFormat(suffix = "%", digits = 2)
+    )
+  ),
+  borderless = TRUE,
+  highlight = TRUE,
+)
+```
 
-#### 2.3 Statistical Areas by Descending Density
+![](densities.nb_files/figure-gfm/unnamed-chunk-1-1.png)<!-- --> \####
+2.3 Statistical Areas by Descending Density
 
 ``` r
 PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)

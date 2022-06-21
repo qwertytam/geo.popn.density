@@ -1,12 +1,13 @@
 ---
 title: "Population Densities - Comparing Across (Selected) Countries"
 output:
-  html_document:
-    df_print: paged
+  word_document: default
   github_document: default
   html_notebook: default
+  html_document:
+    df_print: paged
   pdf_document: default
-keep_md: true
+keep_md: yes
 ---
 
 ## Notebook Summary 
@@ -43,6 +44,7 @@ method = "method"
 all_data <- GetAllData()
 ```
 
+
 ### 2. Data Review
 #### 2.1 Density Calculations by Country
 ```{r density by country}
@@ -56,8 +58,70 @@ PlotDensities(densities, density = density, ccode = ccode)
 # Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density <- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
 mdn_sa <- FindMedian(all_by_density, cum_pct = cum_pct)
-dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+
+tble <- dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+
 ```
+
+```{r}
+tbl <- reactable::reactable(
+  tble,
+  defaultColDef = reactable::colDef(
+    header = function(value) gsub("_", " ", value, fixed = TRUE),
+    align = "center",
+    minWidth = 80,
+  ),
+  columns = list(
+    MSA_Name = reactable::colDef(
+      minWidth = 100
+    ),
+    SA_Code = reactable::colDef(
+      cell = function(value) as.character(value)
+      ,
+      minWidth = 110
+    ),
+    Popn_Est = reactable::colDef(
+      name = "Population Estimate",
+      minWidth = 100,
+      format = reactable::colFormat(digits = 0,
+                                    separators = TRUE,
+                                    locales = "en-GB")
+    ),
+    Area_km2 = reactable::colDef(
+      name = "Area (km<sup>2</sup>)",
+      html = TRUE,
+      format = reactable::colFormat(digits = 2,
+                                    separators = TRUE,
+                                    locales = "en-GB")
+    ),
+    Density = reactable::colDef(
+      format = reactable::colFormat(digits = 2,
+                                    separators = TRUE,
+                                    locales = "en-GB")
+    ),
+    Cum_Popn_Perc = reactable::colDef(
+      name = "Cum. Population %",
+      minWidth = 100,
+      format = reactable::colFormat(suffix = "%", digits = 2)
+    )
+  ),
+  borderless = TRUE,
+  highlight = TRUE,
+  class = "standings-table"
+)
+
+htmltools::div(class = "standings", tbl)
+
+htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
+
+```
+```{css}
+.standings {
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.50rem;
+}
+```
+
 
 #### 2.3 Statistical Areas by Descending Density
 ```{r SA desc density}
