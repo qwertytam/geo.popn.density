@@ -1774,54 +1774,126 @@ pre code {
 <p>This notebook looks at population density metrics for a set of
 selected countries. The basic flow is reading in the data, some data
 manipulation, then reviewing various plots</p>
-<p>Current countries in the data source: - Australia - United States of
+<p>Current countries in the data: - Australia - United States of
 America</p>
 <hr />
-<div id="initialize-and-read-in-the-data" class="section level3">
-<h3>1. Initialize and Read in the Data</h3>
+<div id="initialise-and-read-in-the-data" class="section level3">
+<h3>1. Initialise and Read in the Data</h3>
 <p>Data is sourced from the relevant national statistical agencies and
 gathered using scripts in the <code>data-raw</code> directory with
 results stored as <code>csv</code> files in the
 <code>inst/extdata</code> directory and as <code>rda</code> files in the
-<code>data</code> directory.</p>
+<code>data</code> directory. <br></p>
+<div id="initialisation" class="section level5">
+<h5>Initialisation</h5>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBMb2FkIGxpYnJhcnkgZm9yIHN1Y2Nlc3NmdWwga25pdFxubGlicmFyeShnZW8ucG9wbi5kZW5zaXR5KVxuXG4jIFNldCB1cCB2YXJpYWJsZXMgd2Ugd2lsbCByZXVzZSBpbiB0aGUgbm90ZWJvb2tcbmNjb2RlID0gXCJDb3VudHJ5X0NvZGVcIlxubXNhX25hbWUgPSBcIk1TQV9OYW1lXCJcbnBwbl9lc3QgPSBcIlBvcG5fRXN0XCJcbmFyZWEgPSBcIkFyZWFfa20yXCJcbmRlbnNpdHkgPSBcIkRlbnNpdHlcIlxucHBuX3BjdCA9IFwiUGVyY19Qb3BuXCJcbmN1bV9wY3QgPSBcIkN1bV9Qb3BuX1BlcmNcIlxubWV0aG9kID0gXCJtZXRob2RcIlxuXG4jIEdldCB0aGUgZGF0YVxuYWxsX2RhdGEgPC0gR2V0QWxsRGF0YSgpXG5cbmh0bWx0b29sczo6dGFncyRsaW5rKGhyZWYgPSBcImh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1LYXJsYTo0MDAsNzAwfEZpcmErTW9ubyZkaXNwbGF5PWZhbGxiYWNrXCIsIHJlbCA9IFwic3R5bGVzaGVldFwiKVxuYGBgIn0= -->
-<pre class="r"><code># Load library for successful knit
-library(geo.popn.density)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeShnZW8ucG9wbi5kZW5zaXR5KVxuXG4jIFNldCB1cCB2YXJpYWJsZXMgd2Ugd2lsbCByZXVzZSBpbiB0aGUgbm90ZWJvb2tcbmNjb2RlIDwtIFwiQ291bnRyeV9Db2RlXCJcbnNhYmJyIDwtIFwiU3RhdGVfQWJiclwiXG5tc2FfbmFtZSA8LSBcIk1TQV9OYW1lXCJcbnNhX2NvZGUgPC0gXCJTQV9Db2RlXCJcbnBwbl9lc3QgPC0gXCJQb3BuX0VzdFwiXG5hcmVhIDwtIFwiQXJlYV9rbTJcIlxuZGVuc2l0eSA8LSBcIkRlbnNpdHlcIlxucHBuX3BjdCA8LSBcIlBlcmNfUG9wblwiXG5jdW1fcGN0IDwtIFwiQ3VtX1BvcG5fUGVyY1wiXG5tZXRob2QgPC0gXCJtZXRob2RcIlxuYGBgIn0= -->
+<pre class="r"><code>library(geo.popn.density)
 
 # Set up variables we will reuse in the notebook
-ccode = &quot;Country_Code&quot;
-msa_name = &quot;MSA_Name&quot;
-ppn_est = &quot;Popn_Est&quot;
-area = &quot;Area_km2&quot;
-density = &quot;Density&quot;
-ppn_pct = &quot;Perc_Popn&quot;
-cum_pct = &quot;Cum_Popn_Perc&quot;
-method = &quot;method&quot;
-
-# Get the data
-all_data &lt;- GetAllData()
-
-htmltools::tags$link(href = &quot;https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&amp;display=fallback&quot;, rel = &quot;stylesheet&quot;)</code></pre>
+ccode &lt;- &quot;Country_Code&quot;
+sabbr &lt;- &quot;State_Abbr&quot;
+msa_name &lt;- &quot;MSA_Name&quot;
+sa_code &lt;- &quot;SA_Code&quot;
+ppn_est &lt;- &quot;Popn_Est&quot;
+area &lt;- &quot;Area_km2&quot;
+density &lt;- &quot;Density&quot;
+ppn_pct &lt;- &quot;Perc_Popn&quot;
+cum_pct &lt;- &quot;Cum_Popn_Perc&quot;
+method &lt;- &quot;method&quot;</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
+<div id="load-data" class="section level5">
+<h5>Load Data</h5>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<style type="text/css">
-.standings {
-  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.50rem;
-}
-</style>
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuYWxsX2RhdGEgPC0gR2V0QWxsRGF0YSgpXG5gYGAifQ== -->
+<pre class="r"><code>all_data &lt;- GetAllData()</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+<p><br></p>
+</div>
 </div>
 <div id="data-review" class="section level3">
 <h3>2. Data Review</h3>
+<div id="data-coverage" class="section level4">
+<h4>2.1 Data Coverage</h4>
+<div id="total-population-area-and-avg.-density-by-country" class="section level5">
+<h5>Total Population, Area and Avg. Density by Country</h5>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGJsIDwtIFNob3dDb3VudHJ5VG90YWxzKGFsbF9kYXRhKVxuaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSBcInRhYmxlXCIsIHRibClcbmBgYCJ9 -->
+<pre class="r"><code>tbl &lt;- ShowCountryTotals(all_data)
+htmltools::div(class = &quot;table&quot;, tbl)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br></p>
+</div>
+<div id="population-summary-statistics-by-statistical-area" class="section level5">
+<h5>Population Summary Statistics by Statistical Area</h5>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGJsIDwtIFNob3dTdGF0cyhhbGxfZGF0YSwgc3RhdF9jb2wgPSBwcG5fZXN0KVxuaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSBcInRhYmxlXCIsIHRibClcbmBgYCJ9 -->
+<pre class="r"><code>tbl &lt;- ShowStats(all_data, stat_col = ppn_est)
+htmltools::div(class = &quot;table&quot;, tbl)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br></p>
+</div>
+<div id="and-by-metropolitan-area" class="section level5">
+<h5>And by Metropolitan Area</h5>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGJsIDwtIFNob3dTdGF0cyhhbGxfZGF0YSwgbXNhX25hbWUsIHBwbl9lc3QpXG5odG1sdG9vbHM6OmRpdihjbGFzcyA9IFwidGFibGVcIiwgdGJsKVxuYGBgIn0= -->
+<pre class="r"><code>tbl &lt;- ShowStats(all_data, msa_name, ppn_est)
+htmltools::div(class = &quot;table&quot;, tbl)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br></p>
+</div>
+<div id="area-summary-statistics-by-statistical-area" class="section level5">
+<h5>Area Summary Statistics by Statistical Area</h5>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGJsIDwtIFNob3dTdGF0cyhhbGxfZGF0YSwgc3RhdF9jb2wgPSBhcmVhKVxuaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSBcInRhYmxlXCIsIHRibClcbmBgYCJ9 -->
+<pre class="r"><code>tbl &lt;- ShowStats(all_data, stat_col = area)
+htmltools::div(class = &quot;table&quot;, tbl)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br></p>
+</div>
+<div id="and-by-metropolitan-area-1" class="section level5">
+<h5>And by Metropolitan Area</h5>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGJsIDwtIFNob3dTdGF0cyhhbGxfZGF0YSwgbXNhX25hbWUsIGFyZWEpXG5odG1sdG9vbHM6OmRpdihjbGFzcyA9IFwidGFibGVcIiwgdGJsKVxuYGBgIn0= -->
+<pre class="r"><code>tbl &lt;- ShowStats(all_data, msa_name, area)
+htmltools::div(class = &quot;table&quot;, tbl)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p><br></p>
+</div>
+</div>
+<div id="discussion-2022-06-21" class="section level4">
+<h4>Discussion 2022-06-21</h4>
+<p>The “Statistical Area Level 2” is the lowest level statistical area
+data generally available for Australian population and is driving a much
+lower fidelity than that available for the US. This leads to inevitable
+issues of just how comparable these statistic actually across these data
+sets.<br />
+<br></p>
+</div>
 <div id="density-calculations-by-country" class="section level4">
-<h4>2.1 Density Calculations by Country</h4>
+<h4>2.2 Density Calculations by Country</h4>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuZGVuc2l0aWVzIDwtIENhbGNEZW5zaXRpZXMoYWxsX2RhdGEsIGNjb2RlID0gY2NvZGUsIHBwbl9lc3QgPSBwcG5fZXN0LFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFyZWEgPSBhcmVhLCBkZW5zaXR5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSlcblBsb3REZW5zaXRpZXMoZGVuc2l0aWVzLCBkZW5zaXR5ID0gZGVuc2l0eSwgY2NvZGUgPSBjY29kZSlcbmBgYCJ9 -->
@@ -1831,75 +1903,31 @@ PlotDensities(densities, density = density, ccode = ccode)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-</div>
-<div id="the-median-statistical-area-by-density" class="section level4">
-<h4>2.2 The Median Statistical Area by Density</h4>
+<p><br><br></p>
+<div id="the-median-statistical-area-by-density" class="section level5">
+<h5>The Median Statistical Area by Density</h5>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBTb3J0aW5nIHRoZSBkYXRhIGJ5IGRlc2NlbmRpbmcgZGF0YSBhbmQgY2FsY3VsYXRpbmcgdGhlIGN1bXVsYXRpdmUgcGVyY2VudGFnZSBwb3B1bGF0aW9uIHRvIGZpbmQgdGhlIG1lZGlhblxuYWxsX2J5X2RlbnNpdHkgPC0gQ2FsY0N1bVBlcmNlbnQoYWxsX2RhdGEsIGN1bV9wY3QgPSBjdW1fcGN0LCBtZXRyaWMgPSBwcG5fZXN0LCBzb3J0X2J5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSlcbm1kbl9zYSA8LSBGaW5kTWVkaWFuKGFsbF9ieV9kZW5zaXR5LCBjdW1fcGN0ID0gY3VtX3BjdClcblxudGJsZSA8LSBkcGx5cjo6c2VsZWN0KG1kbl9zYSwgQ291bnRyeV9Db2RlLCBTdGF0ZV9BYmJyLCBNU0FfTmFtZSwgU0FfQ29kZSwgUG9wbl9Fc3QsIEFyZWFfa20yLCBEZW5zaXR5LCBDdW1fUG9wbl9QZXJjKVxuXG5gYGAifQ== -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBTb3J0aW5nIHRoZSBkYXRhIGJ5IGRlc2NlbmRpbmcgZGF0YSBhbmQgY2FsY3VsYXRpbmcgdGhlIGN1bXVsYXRpdmUgcGVyY2VudGFnZSBwb3B1bGF0aW9uIHRvIGZpbmQgdGhlIG1lZGlhblxuYWxsX2J5X2RlbnNpdHkgPC0gQ2FsY0N1bVBlcmNlbnQoYWxsX2RhdGEsIGN1bV9wY3QgPSBjdW1fcGN0LCBtZXRyaWMgPSBwcG5fZXN0LCBzb3J0X2J5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSlcbm1kbl9zYSA8LSBGaW5kTWVkaWFuKGFsbF9ieV9kZW5zaXR5LCBjdW1fcGN0ID0gY3VtX3BjdClcbnRibCA8LSBTaG93TWVkaWFuVGFibGUobWRuX3NhLCBjKGNjb2RlLCBzYWJiciwgbXNhX25hbWUsIHNhX2NvZGUsIHBwbl9lc3QsIGFyZWEsIGRlbnNpdHksIGN1bV9wY3QpKVxuaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSBcInRhYmxlXCIsIHRibClcblxuYGBgIn0= -->
 <pre class="r"><code># Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density &lt;- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
 mdn_sa &lt;- FindMedian(all_by_density, cum_pct = cum_pct)
-
-tble &lt;- dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+tbl &lt;- ShowMedianTable(mdn_sa, c(ccode, sabbr, msa_name, sa_code, ppn_est, area, density, cum_pct))
+htmltools::div(class = &quot;table&quot;, tbl)
 </code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<!-- rnb-text-end -->
-<!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxudGJsIDwtIHJlYWN0YWJsZTo6cmVhY3RhYmxlKFxuICB0YmxlLFxuICBkZWZhdWx0Q29sRGVmID0gcmVhY3RhYmxlOjpjb2xEZWYoXG4gICAgaGVhZGVyID0gZnVuY3Rpb24odmFsdWUpIGdzdWIoXCJfXCIsIFwiIFwiLCB2YWx1ZSwgZml4ZWQgPSBUUlVFKSxcbiAgICBhbGlnbiA9IFwiY2VudGVyXCIsXG4gICAgbWluV2lkdGggPSA4MCxcbiAgKSxcbiAgY29sdW1ucyA9IGxpc3QoXG4gICAgTVNBX05hbWUgPSByZWFjdGFibGU6OmNvbERlZihcbiAgICAgIG1pbldpZHRoID0gMTAwXG4gICAgKSxcbiAgICBTQV9Db2RlID0gcmVhY3RhYmxlOjpjb2xEZWYoXG4gICAgICBjZWxsID0gZnVuY3Rpb24odmFsdWUpIGFzLmNoYXJhY3Rlcih2YWx1ZSlcbiAgICAgICxcbiAgICAgIG1pbldpZHRoID0gMTEwXG4gICAgKSxcbiAgICBQb3BuX0VzdCA9IHJlYWN0YWJsZTo6Y29sRGVmKFxuICAgICAgbmFtZSA9IFwiUG9wdWxhdGlvbiBFc3RpbWF0ZVwiLFxuICAgICAgbWluV2lkdGggPSAxMDAsXG4gICAgICBmb3JtYXQgPSByZWFjdGFibGU6OmNvbEZvcm1hdChkaWdpdHMgPSAwLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2VwYXJhdG9ycyA9IFRSVUUsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2NhbGVzID0gXCJlbi1HQlwiKVxuICAgICksXG4gICAgQXJlYV9rbTIgPSByZWFjdGFibGU6OmNvbERlZihcbiAgICAgIG5hbWUgPSBcIkFyZWEgKGttPHN1cD4yPFwvc3VwPilcIixcbiAgICAgIGh0bWwgPSBUUlVFLFxuICAgICAgZm9ybWF0ID0gcmVhY3RhYmxlOjpjb2xGb3JtYXQoZGlnaXRzID0gMixcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNlcGFyYXRvcnMgPSBUUlVFLFxuICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbG9jYWxlcyA9IFwiZW4tR0JcIilcbiAgICApLFxuICAgIERlbnNpdHkgPSByZWFjdGFibGU6OmNvbERlZihcbiAgICAgIGZvcm1hdCA9IHJlYWN0YWJsZTo6Y29sRm9ybWF0KGRpZ2l0cyA9IDIsXG4gICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzZXBhcmF0b3JzID0gVFJVRSxcbiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsZXMgPSBcImVuLUdCXCIpXG4gICAgKSxcbiAgICBDdW1fUG9wbl9QZXJjID0gcmVhY3RhYmxlOjpjb2xEZWYoXG4gICAgICBuYW1lID0gXCJDdW0uIFBvcHVsYXRpb24gJVwiLFxuICAgICAgbWluV2lkdGggPSAxMDAsXG4gICAgICBmb3JtYXQgPSByZWFjdGFibGU6OmNvbEZvcm1hdChzdWZmaXggPSBcIiVcIiwgZGlnaXRzID0gMilcbiAgICApXG4gICksXG4gIGJvcmRlcmxlc3MgPSBUUlVFLFxuICBoaWdobGlnaHQgPSBUUlVFLFxuICBjbGFzcyA9IFwic3RhbmRpbmdzLXRhYmxlXCJcbilcblxuaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSBcInN0YW5kaW5nc1wiLCB0YmwpXG5cbmBgYCJ9 -->
-<pre class="r"><code>tbl &lt;- reactable::reactable(
-  tble,
-  defaultColDef = reactable::colDef(
-    header = function(value) gsub(&quot;_&quot;, &quot; &quot;, value, fixed = TRUE),
-    align = &quot;center&quot;,
-    minWidth = 80,
-  ),
-  columns = list(
-    MSA_Name = reactable::colDef(
-      minWidth = 100
-    ),
-    SA_Code = reactable::colDef(
-      cell = function(value) as.character(value)
-      ,
-      minWidth = 110
-    ),
-    Popn_Est = reactable::colDef(
-      name = &quot;Population Estimate&quot;,
-      minWidth = 100,
-      format = reactable::colFormat(digits = 0,
-                                    separators = TRUE,
-                                    locales = &quot;en-GB&quot;)
-    ),
-    Area_km2 = reactable::colDef(
-      name = &quot;Area (km&lt;sup&gt;2&lt;/sup&gt;)&quot;,
-      html = TRUE,
-      format = reactable::colFormat(digits = 2,
-                                    separators = TRUE,
-                                    locales = &quot;en-GB&quot;)
-    ),
-    Density = reactable::colDef(
-      format = reactable::colFormat(digits = 2,
-                                    separators = TRUE,
-                                    locales = &quot;en-GB&quot;)
-    ),
-    Cum_Popn_Perc = reactable::colDef(
-      name = &quot;Cum. Population %&quot;,
-      minWidth = 100,
-      format = reactable::colFormat(suffix = &quot;%&quot;, digits = 2)
-    )
-  ),
-  borderless = TRUE,
-  highlight = TRUE,
-  class = &quot;standings-table&quot;
-)
-
-htmltools::div(class = &quot;standings&quot;, tbl)
-</code></pre>
-<!-- rnb-source-end -->
-<!-- rnb-chunk-end -->
-<!-- rnb-text-begin -->
+<p><br></p>
+</div>
+</div>
+<div id="discussion-2022-06-21-1" class="section level4">
+<h4>Discussion 2022-06-21</h4>
+<p>So how dense is Australia vs. USA? Well depends on how you calculate
+it. The arithmetic method is weighted by areas in the US with very high
+density e.g. in New York and Chicago. The median result is interesting
+as it show the 50th percentile or median person in Australia experiences
+a higher density than the US. <br><br></p>
 </div>
 <div id="statistical-areas-by-descending-density" class="section level4">
 <h4>2.3 Statistical Areas by Descending Density</h4>
@@ -1985,11 +2013,47 @@ Urban Area to SA2</a></li>
 </ul>
 <p>The repo for this code is <a href="https://github.com/qwertytam/geo.popn.density">here</a></p>
 <!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuIyBDU1Mgc3R5bGVzaGVldCByZWZlcmVuY2Vcbmh0bWx0b29sczo6dGFncyRsaW5rKGhyZWYgPSBcImh0dHBzOi8vZm9udHMuZ29vZ2xlYXBpcy5jb20vY3NzP2ZhbWlseT1LYXJsYTo0MDAsNzAwfEZpcmErTW9ubyZkaXNwbGF5PWZhbGxiYWNrXCIsIHJlbCA9IFwic3R5bGVzaGVldFwiKVxuYGBgIn0= -->
+<pre class="r"><code># CSS stylesheet reference
+htmltools::tags$link(href = &quot;https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&amp;display=fallback&quot;, rel = &quot;stylesheet&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<style type="text/css">
+.table {
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.6rem;
+}
+
+.dflt-table {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.country {
+  display: flex;
+  align-items: center;
+}
+
+.country-flag {
+  height: 1.5rem;
+  border: 1px solid #f0f0f0;
+}
+
+.country-name {
+  margin-left: 0.5rem;
+  font-weight: 700;
+}
+</style>
+<!-- rnb-chunk-end -->
 </div>
 </div>
 </div>
 
-<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBvcHVsYXRpb24gRGVuc2l0aWVzIC0gQ29tcGFyaW5nIEFjcm9zcyAoU2VsZWN0ZWQpIENvdW50cmllcyINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICBkZl9wcmludDogcGFnZWQNCiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdA0Ka2VlcF9tZDogeWVzDQotLS0NCg0KIyMgTm90ZWJvb2sgU3VtbWFyeSANClRoaXMgbm90ZWJvb2sgbG9va3MgYXQgcG9wdWxhdGlvbiBkZW5zaXR5IG1ldHJpY3MgZm9yIGEgc2V0IG9mIHNlbGVjdGVkIGNvdW50cmllcy4NClRoZSBiYXNpYyBmbG93IGlzIHJlYWRpbmcgaW4gdGhlIGRhdGEsIHNvbWUgZGF0YSBtYW5pcHVsYXRpb24sIHRoZW4gcmV2aWV3aW5nDQp2YXJpb3VzIHBsb3RzDQoNCkN1cnJlbnQgY291bnRyaWVzIGluIHRoZSBkYXRhIHNvdXJjZToNCi0gQXVzdHJhbGlhDQotIFVuaXRlZCBTdGF0ZXMgb2YgQW1lcmljYQ0KDQotLS0NCiAgDQojIyMgMS4gSW5pdGlhbGl6ZSBhbmQgUmVhZCBpbiB0aGUgRGF0YQ0KRGF0YSBpcyBzb3VyY2VkIGZyb20gdGhlIHJlbGV2YW50IG5hdGlvbmFsIHN0YXRpc3RpY2FsIGFnZW5jaWVzIGFuZCBnYXRoZXJlZA0KdXNpbmcgc2NyaXB0cyBpbiB0aGUgYGRhdGEtcmF3YCBkaXJlY3Rvcnkgd2l0aCByZXN1bHRzIHN0b3JlZCBhcyBgY3N2YCBmaWxlcyBpbg0KdGhlIGBpbnN0L2V4dGRhdGFgIGRpcmVjdG9yeSBhbmQgYXMgYHJkYWAgZmlsZXMgaW4gdGhlIGBkYXRhYCBkaXJlY3RvcnkuDQoNCmBgYHtyIHNldHVwfQ0KIyBMb2FkIGxpYnJhcnkgZm9yIHN1Y2Nlc3NmdWwga25pdA0KbGlicmFyeShnZW8ucG9wbi5kZW5zaXR5KQ0KDQojIFNldCB1cCB2YXJpYWJsZXMgd2Ugd2lsbCByZXVzZSBpbiB0aGUgbm90ZWJvb2sNCmNjb2RlID0gIkNvdW50cnlfQ29kZSINCm1zYV9uYW1lID0gIk1TQV9OYW1lIg0KcHBuX2VzdCA9ICJQb3BuX0VzdCINCmFyZWEgPSAiQXJlYV9rbTIiDQpkZW5zaXR5ID0gIkRlbnNpdHkiDQpwcG5fcGN0ID0gIlBlcmNfUG9wbiINCmN1bV9wY3QgPSAiQ3VtX1BvcG5fUGVyYyINCm1ldGhvZCA9ICJtZXRob2QiDQoNCiMgR2V0IHRoZSBkYXRhDQphbGxfZGF0YSA8LSBHZXRBbGxEYXRhKCkNCg0KaHRtbHRvb2xzOjp0YWdzJGxpbmsoaHJlZiA9ICJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9S2FybGE6NDAwLDcwMHxGaXJhK01vbm8mZGlzcGxheT1mYWxsYmFjayIsIHJlbCA9ICJzdHlsZXNoZWV0IikNCmBgYA0KDQpgYGB7Y3NzIGNzc2RlZm5zfQ0KLnN0YW5kaW5ncyB7DQogIGZvbnQtZmFtaWx5OiBLYXJsYSwgIkhlbHZldGljYSBOZXVlIiwgSGVsdmV0aWNhLCBBcmlhbCwgc2Fucy1zZXJpZjsNCiAgZm9udC1zaXplOiAxLjUwcmVtOw0KfQ0KYGBgDQoNCiMjIyAyLiBEYXRhIFJldmlldw0KIyMjIyAyLjEgRGVuc2l0eSBDYWxjdWxhdGlvbnMgYnkgQ291bnRyeQ0KYGBge3IgZGVuc2l0eSBieSBjb3VudHJ5fQ0KZGVuc2l0aWVzIDwtIENhbGNEZW5zaXRpZXMoYWxsX2RhdGEsIGNjb2RlID0gY2NvZGUsIHBwbl9lc3QgPSBwcG5fZXN0LA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGFyZWEgPSBhcmVhLCBkZW5zaXR5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSkNClBsb3REZW5zaXRpZXMoZGVuc2l0aWVzLCBkZW5zaXR5ID0gZGVuc2l0eSwgY2NvZGUgPSBjY29kZSkNCmBgYA0KDQojIyMjIDIuMiBUaGUgTWVkaWFuIFN0YXRpc3RpY2FsIEFyZWEgYnkgRGVuc2l0eQ0KYGBge3IgU0EgbWVkaWFuIGRlbnNpdHl9DQojIFNvcnRpbmcgdGhlIGRhdGEgYnkgZGVzY2VuZGluZyBkYXRhIGFuZCBjYWxjdWxhdGluZyB0aGUgY3VtdWxhdGl2ZSBwZXJjZW50YWdlIHBvcHVsYXRpb24gdG8gZmluZCB0aGUgbWVkaWFuDQphbGxfYnlfZGVuc2l0eSA8LSBDYWxjQ3VtUGVyY2VudChhbGxfZGF0YSwgY3VtX3BjdCA9IGN1bV9wY3QsIG1ldHJpYyA9IHBwbl9lc3QsIHNvcnRfYnkgPSBkZW5zaXR5LCBncm91cF9ieSA9IGNjb2RlKQ0KbWRuX3NhIDwtIEZpbmRNZWRpYW4oYWxsX2J5X2RlbnNpdHksIGN1bV9wY3QgPSBjdW1fcGN0KQ0KDQp0YmxlIDwtIGRwbHlyOjpzZWxlY3QobWRuX3NhLCBDb3VudHJ5X0NvZGUsIFN0YXRlX0FiYnIsIE1TQV9OYW1lLCBTQV9Db2RlLCBQb3BuX0VzdCwgQXJlYV9rbTIsIERlbnNpdHksIEN1bV9Qb3BuX1BlcmMpDQoNCmBgYA0KDQpgYGB7ciByZWFjdGFibGV9DQp0YmwgPC0gcmVhY3RhYmxlOjpyZWFjdGFibGUoDQogIHRibGUsDQogIGRlZmF1bHRDb2xEZWYgPSByZWFjdGFibGU6OmNvbERlZigNCiAgICBoZWFkZXIgPSBmdW5jdGlvbih2YWx1ZSkgZ3N1YigiXyIsICIgIiwgdmFsdWUsIGZpeGVkID0gVFJVRSksDQogICAgYWxpZ24gPSAiY2VudGVyIiwNCiAgICBtaW5XaWR0aCA9IDgwLA0KICApLA0KICBjb2x1bW5zID0gbGlzdCgNCiAgICBNU0FfTmFtZSA9IHJlYWN0YWJsZTo6Y29sRGVmKA0KICAgICAgbWluV2lkdGggPSAxMDANCiAgICApLA0KICAgIFNBX0NvZGUgPSByZWFjdGFibGU6OmNvbERlZigNCiAgICAgIGNlbGwgPSBmdW5jdGlvbih2YWx1ZSkgYXMuY2hhcmFjdGVyKHZhbHVlKQ0KICAgICAgLA0KICAgICAgbWluV2lkdGggPSAxMTANCiAgICApLA0KICAgIFBvcG5fRXN0ID0gcmVhY3RhYmxlOjpjb2xEZWYoDQogICAgICBuYW1lID0gIlBvcHVsYXRpb24gRXN0aW1hdGUiLA0KICAgICAgbWluV2lkdGggPSAxMDAsDQogICAgICBmb3JtYXQgPSByZWFjdGFibGU6OmNvbEZvcm1hdChkaWdpdHMgPSAwLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgc2VwYXJhdG9ycyA9IFRSVUUsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBsb2NhbGVzID0gImVuLUdCIikNCiAgICApLA0KICAgIEFyZWFfa20yID0gcmVhY3RhYmxlOjpjb2xEZWYoDQogICAgICBuYW1lID0gIkFyZWEgKGttPHN1cD4yPC9zdXA+KSIsDQogICAgICBodG1sID0gVFJVRSwNCiAgICAgIGZvcm1hdCA9IHJlYWN0YWJsZTo6Y29sRm9ybWF0KGRpZ2l0cyA9IDIsDQogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBzZXBhcmF0b3JzID0gVFJVRSwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGxvY2FsZXMgPSAiZW4tR0IiKQ0KICAgICksDQogICAgRGVuc2l0eSA9IHJlYWN0YWJsZTo6Y29sRGVmKA0KICAgICAgZm9ybWF0ID0gcmVhY3RhYmxlOjpjb2xGb3JtYXQoZGlnaXRzID0gMiwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHNlcGFyYXRvcnMgPSBUUlVFLA0KICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbG9jYWxlcyA9ICJlbi1HQiIpDQogICAgKSwNCiAgICBDdW1fUG9wbl9QZXJjID0gcmVhY3RhYmxlOjpjb2xEZWYoDQogICAgICBuYW1lID0gIkN1bS4gUG9wdWxhdGlvbiAlIiwNCiAgICAgIG1pbldpZHRoID0gMTAwLA0KICAgICAgZm9ybWF0ID0gcmVhY3RhYmxlOjpjb2xGb3JtYXQoc3VmZml4ID0gIiUiLCBkaWdpdHMgPSAyKQ0KICAgICkNCiAgKSwNCiAgYm9yZGVybGVzcyA9IFRSVUUsDQogIGhpZ2hsaWdodCA9IFRSVUUsDQogIGNsYXNzID0gInN0YW5kaW5ncy10YWJsZSINCikNCg0KaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSAic3RhbmRpbmdzIiwgdGJsKQ0KDQpgYGANCiMjIyMgMi4zIFN0YXRpc3RpY2FsIEFyZWFzIGJ5IERlc2NlbmRpbmcgRGVuc2l0eQ0KYGBge3IgU0EgZGVzYyBkZW5zaXR5fQ0KUGxvdEFsbERhdGFCeURlbnNpdHkoYWxsX2J5X2RlbnNpdHksIGRlbnNpdHkgPSBkZW5zaXR5LCBjY29kZSA9IGNjb2RlLCBjdW1fcGN0ID0gY3VtX3BjdCkNCmBgYA0KDQojIyMjIDIuNCBUaGUgTWVkaWFuIE1ldHJvcG9saXRhbiBBcmVhIGJ5IFBvcHVsYXRpb24NCmBgYHtyIE1TQSBtZWRpYW4gcG9wbn0NCiMgR3JvdXAgdGhlIGRhdGEgaW50byBpdHMgbWV0cm9wb2xpdGFuIHN0YXRpc3RpY2FsIGFyZWFzDQptc2FzIDwtIEdyb3VwRGF0YShhbGxfZGF0YSwgcHBuX2VzdCA9IHBwbl9lc3QsIGFyZWEgPSBhcmVhLCBwcG5fcGN0ID0gcHBuX3BjdCwNCiAgICAgICAgICAgICAgICAgIGRlbnNpdHkgPSBkZW5zaXR5LA0KICAgICAgICAgICAgICAgICAgZ3JvdXBfYnkgPSBjKGNjb2RlLCAiTVNBX0NvZGUiLCBtc2FfbmFtZSwgIk1ldHJvX01pY3JvIikpDQoNCiMgU29ydCBieSBwb3B1bGF0aW9uIGRlc2NlbmRpbmcNCm1zYXNfYnlfcG9wbiA8LSBTb3J0TVNBc2J5UG9wbihtc2FzLCBjdW1fcGN0ID0gY3VtX3BjdCwgcHBuX2VzdCA9IHBwbl9lc3QsIHBwbl9wY3QgPSBwcG5fcGN0LCBtc2FfbmFtZSA9IG1zYV9uYW1lLCBncm91cF9ieSA9IGNjb2RlKQ0KbWRuX21zYV9wb3BuIDwtIEZpbmRNZWRpYW4obXNhc19ieV9wb3BuLCBjdW1fcGN0ID0gY3VtX3BjdCkNCmRwbHlyOjpzZWxlY3QobWRuX21zYV9wb3BuLCBDb3VudHJ5X0NvZGUsIE1TQV9OYW1lLCBQb3BuX0VzdCwgQXJlYV9rbTIsIERlbnNpdHksIEN1bV9Qb3BuX1BlcmMpDQpgYGANCg0KIyMjIyAyLjUgTWV0cm9wbGl0YW4gQXJlYXMgYnkgRGVzY2VuZGluZyBQb3B1bGF0aW9uDQpgYGB7ciBNU0EgZGVzYyBwb3BufQ0KUGxvdE1TQXNCeVBvcG4obXNhc19ieV9wb3BuLCBwcG5fZXN0ID0gcHBuX2VzdCwgY2NvZGUgPSBjY29kZSwgY3VtX3BjdCA9IGN1bV9wY3QpDQpgYGANCg0KIyMjIyAyLjYgVGhlIE1lZGlhbiBNZXRyb3BvbGl0YW4gQXJlYSBieSBTaW1wbGUgRGVuc2l0eQ0KYGBge3IgTVNBIG1lZGlhbiBkZW5zaXR5fQ0KbXNhc19ieV9kZW5zaXR5IDwtIFNvcnRNU0FzYnlEZW5zaXR5KG1zYXMsIGN1bV9wY3QgPSBjdW1fcGN0LCBkZW5zaXR5ID0gZGVuc2l0eSwgcHBuX3BjdCA9IHBwbl9wY3QsIGdyb3VwX2J5ID0gY2NvZGUpDQptZG5fbXNhX2RlbnNpdHkgPC0gRmluZE1lZGlhbihtc2FzX2J5X2RlbnNpdHksIGN1bV9wY3QgPSBjdW1fcGN0KQ0KZHBseXI6OnNlbGVjdChtZG5fbXNhX2RlbnNpdHksIENvdW50cnlfQ29kZSwgTVNBX05hbWUsIFBvcG5fRXN0LCBBcmVhX2ttMiwgRGVuc2l0eSwgQ3VtX1BvcG5fUGVyYykNCmBgYA0KDQojIyMjIDIuNyBNZXRyb3BvbGl0YW4gQXJlYXMgYnkgRGVzY2VuZGluZyBTaW1wbGUgRGVuc2l0eQ0KYGBge3IgTVNBIGRlc2MgZGVuc2l0eX0NClBsb3RNU0FzQnlEZW5zaXR5KG1zYXNfYnlfZGVuc2l0eSwgZGVuc2l0eSA9IGRlbnNpdHksIGNjb2RlID0gY2NvZGUsIGN1bV9wY3QgPSBjdW1fcGN0KQ0KYGBgDQoNCiMjIFNvdXJjZSBEYXRhDQojIyMgQXVzdHJhbGlhDQpEYXRhIHNvdXJjZWQgZnJvbSB0aGUgQXVzdHJhbGlhbiBCdXJlYXUgb2YgU3RhdGlzdGljcy4gUG9wdWxhdGlvbiBkYXRhIHNvdXJjZWQNCmF0IHRoZSBTdGF0aXN0aWNhbCBBcmVhIDIgbGV2ZWwuIFNlZSByZWZlcmVuY2VzIGJlbG93IGZvciBmdXJ0aGVyIGRldGFpbCBvbg0KQXVzdHJhbGlhbiBzdGF0aXN0aWNhbCBnZW9ncmFwaGljIHN0YW5kYXJkcy4gRGVuc2l0eSBpcyBnaXZlbiBieSB0aGUgQUJTIGJ1dA0KaXMgcmVjYWxjdWxhdGVkIGhlcmUgYXMgdGhlIHBvcHVsYXRpb24tYXJlYS1kZW5zaXR5IG51bWJlcnMgZG8gbm90IGxpbmUgdXAgYXMNCmdpdmVuLiBEYXRhIGlzIG91dHB1dCB0byBgYXUuY3N2YCBpbiB0aGUgZGF0YSBkaXJlY3RvcnkuDQoNCiMjIyMgUmVmZXJlbmNlczoNCiogW0Rlc2NyaXB0aW9uIG9mIHRoZSBBdXN0cmFsaWFuIFN0YXRpc3RpY2FsIEdlb2dyYXBoeSBTdGFuZGFyZF0oaHR0cHM6Ly93d3cuYWJzLmdvdi5hdS9zdGF0aXN0aWNzL3N0YW5kYXJkcy9hdXN0cmFsaWFuLXN0YXRpc3RpY2FsLWdlb2dyYXBoeS1zdGFuZGFyZC1hc2dzLWVkaXRpb24tMy9qdWwyMDIxLWp1bjIwMjYjYXNncy1kaWFncmFtKQ0KKiBbQUJTIHBvcHVsYXRpb24gZGF0YSBieSBTQTJdKGh0dHBzOi8vd3d3LmFicy5nb3YuYXUvc3RhdGlzdGljcy9wZW9wbGUvcG9wdWxhdGlvbi9yZWdpb25hbC1wb3B1bGF0aW9uLzIwMjAtMjEjZGF0YS1kb3dubG9hZCkNCiogW1NpZ25pZmljYW50IFVyYmFuIEFyZWEgdG8gU0EyXShodHRwczovL3d3dy5hYnMuZ292LmF1L0FVU1NUQVRTL2Fic0AubnNmL0RldGFpbHNQYWdlLzEyNzAuMC41NS4wMDRKdWx5JTIwMjAxNj9PcGVuRG9jdW1lbnQpDQoNClRoZSByZXBvIGZvciB0aGlzIGNvZGUgaXMgW2hlcmVdKGh0dHBzOi8vZ2l0aHViLmNvbS9xd2VydHl0YW0vZ2VvLnBvcG4uZGVuc2l0eSkNCg0K</div>
+<div id="rmd-source-code">LS0tDQp0aXRsZTogIlBvcHVsYXRpb24gRGVuc2l0aWVzIC0gQ29tcGFyaW5nIEFjcm9zcyAoU2VsZWN0ZWQpIENvdW50cmllcyINCm91dHB1dDoNCiAgaHRtbF9kb2N1bWVudDoNCiAgICBkZl9wcmludDogcGFnZWQNCiAgaHRtbF9ub3RlYm9vazogZGVmYXVsdA0Ka2VlcF9tZDogeWVzDQotLS0NCg0KIyMgTm90ZWJvb2sgU3VtbWFyeSANClRoaXMgbm90ZWJvb2sgbG9va3MgYXQgcG9wdWxhdGlvbiBkZW5zaXR5IG1ldHJpY3MgZm9yIGEgc2V0IG9mIHNlbGVjdGVkIGNvdW50cmllcy4NClRoZSBiYXNpYyBmbG93IGlzIHJlYWRpbmcgaW4gdGhlIGRhdGEsIHNvbWUgZGF0YSBtYW5pcHVsYXRpb24sIHRoZW4gcmV2aWV3aW5nDQp2YXJpb3VzIHBsb3RzDQoNCkN1cnJlbnQgY291bnRyaWVzIGluIHRoZSBkYXRhOg0KLSBBdXN0cmFsaWENCi0gVW5pdGVkIFN0YXRlcyBvZiBBbWVyaWNhDQoNCi0tLQ0KDQojIyMgMS4gSW5pdGlhbGlzZSBhbmQgUmVhZCBpbiB0aGUgRGF0YQ0KRGF0YSBpcyBzb3VyY2VkIGZyb20gdGhlIHJlbGV2YW50IG5hdGlvbmFsIHN0YXRpc3RpY2FsIGFnZW5jaWVzIGFuZCBnYXRoZXJlZA0KdXNpbmcgc2NyaXB0cyBpbiB0aGUgYGRhdGEtcmF3YCBkaXJlY3Rvcnkgd2l0aCByZXN1bHRzIHN0b3JlZCBhcyBgY3N2YCBmaWxlcyBpbg0KdGhlIGBpbnN0L2V4dGRhdGFgIGRpcmVjdG9yeSBhbmQgYXMgYHJkYWAgZmlsZXMgaW4gdGhlIGBkYXRhYCBkaXJlY3RvcnkuDQo8YnI+ICANCiAgDQojIyMjIyBJbml0aWFsaXNhdGlvbg0KYGBge3Igc2V0dXB9DQpsaWJyYXJ5KGdlby5wb3BuLmRlbnNpdHkpDQoNCiMgU2V0IHVwIHZhcmlhYmxlcyB3ZSB3aWxsIHJldXNlIGluIHRoZSBub3RlYm9vaw0KY2NvZGUgPC0gIkNvdW50cnlfQ29kZSINCnNhYmJyIDwtICJTdGF0ZV9BYmJyIg0KbXNhX25hbWUgPC0gIk1TQV9OYW1lIg0Kc2FfY29kZSA8LSAiU0FfQ29kZSINCnBwbl9lc3QgPC0gIlBvcG5fRXN0Ig0KYXJlYSA8LSAiQXJlYV9rbTIiDQpkZW5zaXR5IDwtICJEZW5zaXR5Ig0KcHBuX3BjdCA8LSAiUGVyY19Qb3BuIg0KY3VtX3BjdCA8LSAiQ3VtX1BvcG5fUGVyYyINCm1ldGhvZCA8LSAibWV0aG9kIg0KYGBgDQoNCiMjIyMjIExvYWQgRGF0YQ0KYGBge3IgZ2V0ZGF0YX0NCmFsbF9kYXRhIDwtIEdldEFsbERhdGEoKQ0KYGBgDQo8YnI+ICANCiAgDQojIyMgMi4gRGF0YSBSZXZpZXcNCiMjIyMgMi4xIERhdGEgQ292ZXJhZ2UNCiMjIyMjIFRvdGFsIFBvcHVsYXRpb24sIEFyZWEgYW5kIEF2Zy4gRGVuc2l0eSBieSBDb3VudHJ5DQpgYGB7ciBkYXRhY292ZXJhZ2V9DQp0YmwgPC0gU2hvd0NvdW50cnlUb3RhbHMoYWxsX2RhdGEpDQpodG1sdG9vbHM6OmRpdihjbGFzcyA9ICJ0YWJsZSIsIHRibCkNCmBgYA0KPGJyPiAgDQogIA0KIyMjIyMgUG9wdWxhdGlvbiBTdW1tYXJ5IFN0YXRpc3RpY3MgYnkgU3RhdGlzdGljYWwgQXJlYQ0KYGBge3Igc2Fwb3Buc3RhdHN9DQp0YmwgPC0gU2hvd1N0YXRzKGFsbF9kYXRhLCBzdGF0X2NvbCA9IHBwbl9lc3QpDQpodG1sdG9vbHM6OmRpdihjbGFzcyA9ICJ0YWJsZSIsIHRibCkNCmBgYA0KPGJyPiAgDQoNCiMjIyMjIEFuZCBieSBNZXRyb3BvbGl0YW4gQXJlYQ0KYGBgIHtyIG1zYXBvcG5zdGF0c30NCnRibCA8LSBTaG93U3RhdHMoYWxsX2RhdGEsIG1zYV9uYW1lLCBwcG5fZXN0KQ0KaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSAidGFibGUiLCB0YmwpDQpgYGANCjxicj4gIA0KICANCiMjIyMjIEFyZWEgU3VtbWFyeSBTdGF0aXN0aWNzIGJ5IFN0YXRpc3RpY2FsIEFyZWENCmBgYCB7ciBzYWFyZWFzdGF0c30NCnRibCA8LSBTaG93U3RhdHMoYWxsX2RhdGEsIHN0YXRfY29sID0gYXJlYSkNCmh0bWx0b29sczo6ZGl2KGNsYXNzID0gInRhYmxlIiwgdGJsKQ0KYGBgDQo8YnI+ICANCg0KIyMjIyMgQW5kIGJ5IE1ldHJvcG9saXRhbiBBcmVhDQpgYGAge3IgbXNhYXJlYXN0YXRzfQ0KdGJsIDwtIFNob3dTdGF0cyhhbGxfZGF0YSwgbXNhX25hbWUsIGFyZWEpDQpodG1sdG9vbHM6OmRpdihjbGFzcyA9ICJ0YWJsZSIsIHRibCkNCmBgYA0KPGJyPiAgDQoNCiMjIyMgRGlzY3Vzc2lvbiAyMDIyLTA2LTIxDQpUaGUgIlN0YXRpc3RpY2FsIEFyZWEgTGV2ZWwgMiIgaXMgdGhlIGxvd2VzdCBsZXZlbCBzdGF0aXN0aWNhbCBhcmVhIGRhdGENCmdlbmVyYWxseSBhdmFpbGFibGUgZm9yIEF1c3RyYWxpYW4gcG9wdWxhdGlvbiBhbmQgaXMgZHJpdmluZyBhIG11Y2ggbG93ZXINCmZpZGVsaXR5IHRoYW4gdGhhdCBhdmFpbGFibGUgZm9yIHRoZSBVUy4gVGhpcyBsZWFkcyB0byBpbmV2aXRhYmxlIGlzc3Vlcw0Kb2YganVzdCBob3cgY29tcGFyYWJsZSB0aGVzZSBzdGF0aXN0aWMgYWN0dWFsbHkgYWNyb3NzIHRoZXNlIGRhdGEgc2V0cy4gIA0KPGJyPiAgDQoNCiMjIyMgMi4yIERlbnNpdHkgQ2FsY3VsYXRpb25zIGJ5IENvdW50cnkNCmBgYHtyIGRlbnNpdHkgYnkgY291bnRyeX0NCmRlbnNpdGllcyA8LSBDYWxjRGVuc2l0aWVzKGFsbF9kYXRhLCBjY29kZSA9IGNjb2RlLCBwcG5fZXN0ID0gcHBuX2VzdCwNCiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBhcmVhID0gYXJlYSwgZGVuc2l0eSA9IGRlbnNpdHksIGdyb3VwX2J5ID0gY2NvZGUpDQpQbG90RGVuc2l0aWVzKGRlbnNpdGllcywgZGVuc2l0eSA9IGRlbnNpdHksIGNjb2RlID0gY2NvZGUpDQpgYGANCjxicj48YnI+ICANCg0KIyMjIyMgVGhlIE1lZGlhbiBTdGF0aXN0aWNhbCBBcmVhIGJ5IERlbnNpdHkNCmBgYHtyIFNBIG1lZGlhbiBkZW5zaXR5fQ0KIyBTb3J0aW5nIHRoZSBkYXRhIGJ5IGRlc2NlbmRpbmcgZGF0YSBhbmQgY2FsY3VsYXRpbmcgdGhlIGN1bXVsYXRpdmUgcGVyY2VudGFnZSBwb3B1bGF0aW9uIHRvIGZpbmQgdGhlIG1lZGlhbg0KYWxsX2J5X2RlbnNpdHkgPC0gQ2FsY0N1bVBlcmNlbnQoYWxsX2RhdGEsIGN1bV9wY3QgPSBjdW1fcGN0LCBtZXRyaWMgPSBwcG5fZXN0LCBzb3J0X2J5ID0gZGVuc2l0eSwgZ3JvdXBfYnkgPSBjY29kZSkNCm1kbl9zYSA8LSBGaW5kTWVkaWFuKGFsbF9ieV9kZW5zaXR5LCBjdW1fcGN0ID0gY3VtX3BjdCkNCnRibCA8LSBTaG93TWVkaWFuVGFibGUobWRuX3NhLCBjKGNjb2RlLCBzYWJiciwgbXNhX25hbWUsIHNhX2NvZGUsIHBwbl9lc3QsIGFyZWEsIGRlbnNpdHksIGN1bV9wY3QpKQ0KaHRtbHRvb2xzOjpkaXYoY2xhc3MgPSAidGFibGUiLCB0YmwpDQoNCmBgYA0KPGJyPiAgDQoNCiMjIyMgRGlzY3Vzc2lvbiAyMDIyLTA2LTIxDQpTbyBob3cgZGVuc2UgaXMgQXVzdHJhbGlhIHZzLiBVU0E/IFdlbGwgZGVwZW5kcyBvbiBob3cgeW91IGNhbGN1bGF0ZSBpdC4gVGhlDQphcml0aG1ldGljIG1ldGhvZCBpcyB3ZWlnaHRlZCBieSBhcmVhcyBpbiB0aGUgVVMgd2l0aCB2ZXJ5IGhpZ2ggZGVuc2l0eSBlLmcuIGluDQpOZXcgWW9yayBhbmQgQ2hpY2Fnby4gVGhlIG1lZGlhbiByZXN1bHQgaXMgaW50ZXJlc3RpbmcgYXMgaXQgc2hvdyB0aGUgNTB0aCANCnBlcmNlbnRpbGUgb3IgbWVkaWFuIHBlcnNvbiBpbiBBdXN0cmFsaWEgZXhwZXJpZW5jZXMgYSBoaWdoZXIgZGVuc2l0eSB0aGFuDQp0aGUgVVMuDQo8YnI+PGJyPiAgDQoNCiMjIyMgMi4zIFN0YXRpc3RpY2FsIEFyZWFzIGJ5IERlc2NlbmRpbmcgRGVuc2l0eQ0KYGBge3IgU0EgZGVzYyBkZW5zaXR5fQ0KUGxvdEFsbERhdGFCeURlbnNpdHkoYWxsX2J5X2RlbnNpdHksIGRlbnNpdHkgPSBkZW5zaXR5LCBjY29kZSA9IGNjb2RlLCBjdW1fcGN0ID0gY3VtX3BjdCkNCmBgYA0KDQojIyMjIDIuNCBUaGUgTWVkaWFuIE1ldHJvcG9saXRhbiBBcmVhIGJ5IFBvcHVsYXRpb24NCmBgYHtyIE1TQSBtZWRpYW4gcG9wbn0NCiMgR3JvdXAgdGhlIGRhdGEgaW50byBpdHMgbWV0cm9wb2xpdGFuIHN0YXRpc3RpY2FsIGFyZWFzDQptc2FzIDwtIEdyb3VwRGF0YShhbGxfZGF0YSwgcHBuX2VzdCA9IHBwbl9lc3QsIGFyZWEgPSBhcmVhLCBwcG5fcGN0ID0gcHBuX3BjdCwNCiAgICAgICAgICAgICAgICAgIGRlbnNpdHkgPSBkZW5zaXR5LA0KICAgICAgICAgICAgICAgICAgZ3JvdXBfYnkgPSBjKGNjb2RlLCAiTVNBX0NvZGUiLCBtc2FfbmFtZSwgIk1ldHJvX01pY3JvIikpDQoNCiMgU29ydCBieSBwb3B1bGF0aW9uIGRlc2NlbmRpbmcNCm1zYXNfYnlfcG9wbiA8LSBTb3J0TVNBc2J5UG9wbihtc2FzLCBjdW1fcGN0ID0gY3VtX3BjdCwgcHBuX2VzdCA9IHBwbl9lc3QsIHBwbl9wY3QgPSBwcG5fcGN0LCBtc2FfbmFtZSA9IG1zYV9uYW1lLCBncm91cF9ieSA9IGNjb2RlKQ0KbWRuX21zYV9wb3BuIDwtIEZpbmRNZWRpYW4obXNhc19ieV9wb3BuLCBjdW1fcGN0ID0gY3VtX3BjdCkNCmRwbHlyOjpzZWxlY3QobWRuX21zYV9wb3BuLCBDb3VudHJ5X0NvZGUsIE1TQV9OYW1lLCBQb3BuX0VzdCwgQXJlYV9rbTIsIERlbnNpdHksIEN1bV9Qb3BuX1BlcmMpDQpgYGANCg0KIyMjIyAyLjUgTWV0cm9wbGl0YW4gQXJlYXMgYnkgRGVzY2VuZGluZyBQb3B1bGF0aW9uDQpgYGB7ciBNU0EgZGVzYyBwb3BufQ0KUGxvdE1TQXNCeVBvcG4obXNhc19ieV9wb3BuLCBwcG5fZXN0ID0gcHBuX2VzdCwgY2NvZGUgPSBjY29kZSwgY3VtX3BjdCA9IGN1bV9wY3QpDQpgYGANCg0KIyMjIyAyLjYgVGhlIE1lZGlhbiBNZXRyb3BvbGl0YW4gQXJlYSBieSBTaW1wbGUgRGVuc2l0eQ0KYGBge3IgTVNBIG1lZGlhbiBkZW5zaXR5fQ0KbXNhc19ieV9kZW5zaXR5IDwtIFNvcnRNU0FzYnlEZW5zaXR5KG1zYXMsIGN1bV9wY3QgPSBjdW1fcGN0LCBkZW5zaXR5ID0gZGVuc2l0eSwgcHBuX3BjdCA9IHBwbl9wY3QsIGdyb3VwX2J5ID0gY2NvZGUpDQptZG5fbXNhX2RlbnNpdHkgPC0gRmluZE1lZGlhbihtc2FzX2J5X2RlbnNpdHksIGN1bV9wY3QgPSBjdW1fcGN0KQ0KZHBseXI6OnNlbGVjdChtZG5fbXNhX2RlbnNpdHksIENvdW50cnlfQ29kZSwgTVNBX05hbWUsIFBvcG5fRXN0LCBBcmVhX2ttMiwgRGVuc2l0eSwgQ3VtX1BvcG5fUGVyYykNCmBgYA0KDQojIyMjIDIuNyBNZXRyb3BvbGl0YW4gQXJlYXMgYnkgRGVzY2VuZGluZyBTaW1wbGUgRGVuc2l0eQ0KYGBge3IgTVNBIGRlc2MgZGVuc2l0eX0NClBsb3RNU0FzQnlEZW5zaXR5KG1zYXNfYnlfZGVuc2l0eSwgZGVuc2l0eSA9IGRlbnNpdHksIGNjb2RlID0gY2NvZGUsIGN1bV9wY3QgPSBjdW1fcGN0KQ0KYGBgDQoNCiMjIFNvdXJjZSBEYXRhDQojIyMgQXVzdHJhbGlhDQpEYXRhIHNvdXJjZWQgZnJvbSB0aGUgQXVzdHJhbGlhbiBCdXJlYXUgb2YgU3RhdGlzdGljcy4gUG9wdWxhdGlvbiBkYXRhIHNvdXJjZWQNCmF0IHRoZSBTdGF0aXN0aWNhbCBBcmVhIDIgbGV2ZWwuIFNlZSByZWZlcmVuY2VzIGJlbG93IGZvciBmdXJ0aGVyIGRldGFpbCBvbg0KQXVzdHJhbGlhbiBzdGF0aXN0aWNhbCBnZW9ncmFwaGljIHN0YW5kYXJkcy4gRGVuc2l0eSBpcyBnaXZlbiBieSB0aGUgQUJTIGJ1dA0KaXMgcmVjYWxjdWxhdGVkIGhlcmUgYXMgdGhlIHBvcHVsYXRpb24tYXJlYS1kZW5zaXR5IG51bWJlcnMgZG8gbm90IGxpbmUgdXAgYXMNCmdpdmVuLiBEYXRhIGlzIG91dHB1dCB0byBgYXUuY3N2YCBpbiB0aGUgZGF0YSBkaXJlY3RvcnkuDQoNCiMjIyMgUmVmZXJlbmNlczoNCiogW0Rlc2NyaXB0aW9uIG9mIHRoZSBBdXN0cmFsaWFuIFN0YXRpc3RpY2FsIEdlb2dyYXBoeSBTdGFuZGFyZF0oaHR0cHM6Ly93d3cuYWJzLmdvdi5hdS9zdGF0aXN0aWNzL3N0YW5kYXJkcy9hdXN0cmFsaWFuLXN0YXRpc3RpY2FsLWdlb2dyYXBoeS1zdGFuZGFyZC1hc2dzLWVkaXRpb24tMy9qdWwyMDIxLWp1bjIwMjYjYXNncy1kaWFncmFtKQ0KKiBbQUJTIHBvcHVsYXRpb24gZGF0YSBieSBTQTJdKGh0dHBzOi8vd3d3LmFicy5nb3YuYXUvc3RhdGlzdGljcy9wZW9wbGUvcG9wdWxhdGlvbi9yZWdpb25hbC1wb3B1bGF0aW9uLzIwMjAtMjEjZGF0YS1kb3dubG9hZCkNCiogW1NpZ25pZmljYW50IFVyYmFuIEFyZWEgdG8gU0EyXShodHRwczovL3d3dy5hYnMuZ292LmF1L0FVU1NUQVRTL2Fic0AubnNmL0RldGFpbHNQYWdlLzEyNzAuMC41NS4wMDRKdWx5JTIwMjAxNj9PcGVuRG9jdW1lbnQpDQoNClRoZSByZXBvIGZvciB0aGlzIGNvZGUgaXMgW2hlcmVdKGh0dHBzOi8vZ2l0aHViLmNvbS9xd2VydHl0YW0vZ2VvLnBvcG4uZGVuc2l0eSkNCg0KDQpgYGB7ciBjc3NyZWZ9DQojIENTUyBzdHlsZXNoZWV0IHJlZmVyZW5jZQ0KaHRtbHRvb2xzOjp0YWdzJGxpbmsoaHJlZiA9ICJodHRwczovL2ZvbnRzLmdvb2dsZWFwaXMuY29tL2Nzcz9mYW1pbHk9S2FybGE6NDAwLDcwMHxGaXJhK01vbm8mZGlzcGxheT1mYWxsYmFjayIsIHJlbCA9ICJzdHlsZXNoZWV0IikNCmBgYA0KDQpgYGB7Y3NzIGNzc2RlZm5zfQ0KLnRhYmxlIHsNCiAgZm9udC1mYW1pbHk6IEthcmxhLCAiSGVsdmV0aWNhIE5ldWUiLCBIZWx2ZXRpY2EsIEFyaWFsLCBzYW5zLXNlcmlmOw0KICBmb250LXNpemU6IDEuNnJlbTsNCn0NCg0KLmRmbHQtdGFibGUgew0KICBtYXJnaW4tdG9wOiAxLjI1cmVtOw0KICBtYXJnaW4tYm90dG9tOiAxLjI1cmVtOw0KfQ0KDQouY291bnRyeSB7DQogIGRpc3BsYXk6IGZsZXg7DQogIGFsaWduLWl0ZW1zOiBjZW50ZXI7DQp9DQoNCi5jb3VudHJ5LWZsYWcgew0KICBoZWlnaHQ6IDEuNXJlbTsNCiAgYm9yZGVyOiAxcHggc29saWQgI2YwZjBmMDsNCn0NCg0KLmNvdW50cnktbmFtZSB7DQogIG1hcmdpbi1sZWZ0OiAwLjVyZW07DQogIGZvbnQtd2VpZ2h0OiA3MDA7DQp9DQpgYGANCg==</div>
 
 
 

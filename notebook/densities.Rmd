@@ -12,112 +12,112 @@ This notebook looks at population density metrics for a set of selected countrie
 The basic flow is reading in the data, some data manipulation, then reviewing
 various plots
 
-Current countries in the data source:
+Current countries in the data:
 - Australia
 - United States of America
 
 ---
-  
-### 1. Initialize and Read in the Data
+
+### 1. Initialise and Read in the Data
 Data is sourced from the relevant national statistical agencies and gathered
 using scripts in the `data-raw` directory with results stored as `csv` files in
 the `inst/extdata` directory and as `rda` files in the `data` directory.
-
+<br>  
+  
+##### Initialisation
 ```{r setup}
-# Load library for successful knit
 library(geo.popn.density)
 
 # Set up variables we will reuse in the notebook
-ccode = "Country_Code"
-msa_name = "MSA_Name"
-ppn_est = "Popn_Est"
-area = "Area_km2"
-density = "Density"
-ppn_pct = "Perc_Popn"
-cum_pct = "Cum_Popn_Perc"
-method = "method"
+ccode <- "Country_Code"
+sabbr <- "State_Abbr"
+msa_name <- "MSA_Name"
+sa_code <- "SA_Code"
+ppn_est <- "Popn_Est"
+area <- "Area_km2"
+density <- "Density"
+ppn_pct <- "Perc_Popn"
+cum_pct <- "Cum_Popn_Perc"
+method <- "method"
+```
 
-# Get the data
+##### Load Data
+```{r getdata}
 all_data <- GetAllData()
-
-htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
 ```
-
-```{css cssdefns}
-.standings {
-  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.50rem;
-}
-```
-
+<br>  
+  
 ### 2. Data Review
-#### 2.1 Density Calculations by Country
+#### 2.1 Data Coverage
+##### Total Population, Area and Avg. Density by Country
+```{r datacoverage}
+tbl <- ShowCountryTotals(all_data)
+htmltools::div(class = "table", tbl)
+```
+<br>  
+  
+##### Population Summary Statistics by Statistical Area
+```{r sapopnstats}
+tbl <- ShowStats(all_data, stat_col = ppn_est)
+htmltools::div(class = "table", tbl)
+```
+<br>  
+
+##### And by Metropolitan Area
+``` {r msapopnstats}
+tbl <- ShowStats(all_data, msa_name, ppn_est)
+htmltools::div(class = "table", tbl)
+```
+<br>  
+  
+##### Area Summary Statistics by Statistical Area
+``` {r saareastats}
+tbl <- ShowStats(all_data, stat_col = area)
+htmltools::div(class = "table", tbl)
+```
+<br>  
+
+##### And by Metropolitan Area
+``` {r msaareastats}
+tbl <- ShowStats(all_data, msa_name, area)
+htmltools::div(class = "table", tbl)
+```
+<br>  
+
+#### Discussion 2022-06-21
+The "Statistical Area Level 2" is the lowest level statistical area data
+generally available for Australian population and is driving a much lower
+fidelity than that available for the US. This leads to inevitable issues
+of just how comparable these statistic actually across these data sets.  
+<br>  
+
+#### 2.2 Density Calculations by Country
 ```{r density by country}
 densities <- CalcDensities(all_data, ccode = ccode, ppn_est = ppn_est,
                                area = area, density = density, group_by = ccode)
 PlotDensities(densities, density = density, ccode = ccode)
 ```
+<br><br>  
 
-#### 2.2 The Median Statistical Area by Density
+##### The Median Statistical Area by Density
 ```{r SA median density}
 # Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density <- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
 mdn_sa <- FindMedian(all_by_density, cum_pct = cum_pct)
-
-tble <- dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
-
-```
-
-```{r reactable}
-tbl <- reactable::reactable(
-  tble,
-  defaultColDef = reactable::colDef(
-    header = function(value) gsub("_", " ", value, fixed = TRUE),
-    align = "center",
-    minWidth = 80,
-  ),
-  columns = list(
-    MSA_Name = reactable::colDef(
-      minWidth = 100
-    ),
-    SA_Code = reactable::colDef(
-      cell = function(value) as.character(value)
-      ,
-      minWidth = 110
-    ),
-    Popn_Est = reactable::colDef(
-      name = "Population Estimate",
-      minWidth = 100,
-      format = reactable::colFormat(digits = 0,
-                                    separators = TRUE,
-                                    locales = "en-GB")
-    ),
-    Area_km2 = reactable::colDef(
-      name = "Area (km<sup>2</sup>)",
-      html = TRUE,
-      format = reactable::colFormat(digits = 2,
-                                    separators = TRUE,
-                                    locales = "en-GB")
-    ),
-    Density = reactable::colDef(
-      format = reactable::colFormat(digits = 2,
-                                    separators = TRUE,
-                                    locales = "en-GB")
-    ),
-    Cum_Popn_Perc = reactable::colDef(
-      name = "Cum. Population %",
-      minWidth = 100,
-      format = reactable::colFormat(suffix = "%", digits = 2)
-    )
-  ),
-  borderless = TRUE,
-  highlight = TRUE,
-  class = "standings-table"
-)
-
-htmltools::div(class = "standings", tbl)
+tbl <- ShowMedianTable(mdn_sa, c(ccode, sabbr, msa_name, sa_code, ppn_est, area, density, cum_pct))
+htmltools::div(class = "table", tbl)
 
 ```
+<br>  
+
+#### Discussion 2022-06-21
+So how dense is Australia vs. USA? Well depends on how you calculate it. The
+arithmetic method is weighted by areas in the US with very high density e.g. in
+New York and Chicago. The median result is interesting as it show the 50th 
+percentile or median person in Australia experiences a higher density than
+the US.
+<br><br>  
+
 #### 2.3 Statistical Areas by Descending Density
 ```{r SA desc density}
 PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
@@ -168,3 +168,35 @@ given. Data is output to `au.csv` in the data directory.
 
 The repo for this code is [here](https://github.com/qwertytam/geo.popn.density)
 
+
+```{r cssref}
+# CSS stylesheet reference
+htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
+```
+
+```{css cssdefns}
+.table {
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.6rem;
+}
+
+.dflt-table {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.country {
+  display: flex;
+  align-items: center;
+}
+
+.country-flag {
+  height: 1.5rem;
+  border: 1px solid #f0f0f0;
+}
+
+.country-name {
+  margin-left: 0.5rem;
+  font-weight: 700;
+}
+```
