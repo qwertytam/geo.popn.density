@@ -3,8 +3,20 @@ title: "Population Densities - Comparing Across (Selected) Countries"
 output:
   html_document:
     df_print: paged
+    css: "style.css"
   html_notebook: default
 keep_md: yes
+params:
+  ccode: "Country_Code"
+  sabbr: "State_Abbr"
+  msa_name: "MSA_Name"
+  sa_code: "SA_Code"
+  ppn_est: "Popn_Est"
+  area: "Area_km2"
+  density: "Density"
+  ppn_pct: "Perc_Popn"
+  cum_pct: "Cum_Popn_Perc"
+  method: "method"
 ---
 
 ## Notebook Summary 
@@ -28,21 +40,6 @@ the `inst/extdata` directory and as `rda` files in the `data` directory.
 ```{r setup}
 library(geo.popn.density)
 
-# Set up variables we will reuse in the notebook
-ccode <- "Country_Code"
-sabbr <- "State_Abbr"
-msa_name <- "MSA_Name"
-sa_code <- "SA_Code"
-ppn_est <- "Popn_Est"
-area <- "Area_km2"
-density <- "Density"
-ppn_pct <- "Perc_Popn"
-cum_pct <- "Cum_Popn_Perc"
-method <- "method"
-```
-
-##### Load Data
-```{r getdata}
 all_data <- GetAllData()
 ```
 <br>  
@@ -58,28 +55,28 @@ htmltools::div(class = "table", tbl)
   
 ##### Population Summary Statistics by Statistical Area
 ```{r sapopnstats}
-tbl <- ShowStats(all_data, stat_col = ppn_est)
+tbl <- ShowStats(all_data, stat_col = params$ppn_est)
 htmltools::div(class = "table", tbl)
 ```
 <br>  
 
 ##### And by Metropolitan Area
 ``` {r msapopnstats}
-tbl <- ShowStats(all_data, msa_name, ppn_est)
+tbl <- ShowStats(all_data, group_by = params$msa_name, stat_col = params$ppn_est)
 htmltools::div(class = "table", tbl)
 ```
 <br>  
   
 ##### Area Summary Statistics by Statistical Area
 ``` {r saareastats}
-tbl <- ShowStats(all_data, stat_col = area)
+tbl <- ShowStats(all_data, stat_col = params$area)
 htmltools::div(class = "table", tbl)
 ```
 <br>  
 
 ##### And by Metropolitan Area
 ``` {r msaareastats}
-tbl <- ShowStats(all_data, msa_name, area)
+tbl <- ShowStats(all_data, group_by = params$msa_name, stat_col = params$area)
 htmltools::div(class = "table", tbl)
 ```
 <br>  
@@ -93,18 +90,18 @@ of just how comparable these statistic actually across these data sets.
 
 #### 2.2 Density Calculations by Country
 ```{r density by country}
-densities <- CalcDensities(all_data, ccode = ccode, ppn_est = ppn_est,
-                               area = area, density = density, group_by = ccode)
-PlotDensities(densities, density = density, ccode = ccode)
+densities <- CalcDensities(all_data, ccode = params$ccode, ppn_est = params$ppn_est,
+                               area = params$area, density = params$density, group_by = params$ccode)
+PlotDensities(densities, density = params$density, ccode = params$ccode)
 ```
 <br><br>  
 
 ##### The Median Statistical Area by Density
 ```{r SA median density}
 # Sorting the data by descending data and calculating the cumulative percentage population to find the median
-all_by_density <- CalcCumPercent(all_data, cum_pct = cum_pct, metric = ppn_est, sort_by = density, group_by = ccode)
-mdn_sa <- FindMedian(all_by_density, cum_pct = cum_pct)
-tbl <- ShowMedianTable(mdn_sa, c(ccode, sabbr, msa_name, sa_code, ppn_est, area, density, cum_pct))
+all_by_density <- CalcCumPercent(all_data, cum_pct = params$cum_pct, metric = params$ppn_est, sort_by = params$density, group_by = params$ccode)
+mdn_sa <- FindMedian(all_by_density, cum_pct = params$cum_pct)
+tbl <- ShowMedianTable(mdn_sa, c(params$ccode, params$sabbr, params$msa_name, params$sa_code, params$ppn_est, params$area, params$density, params$cum_pct))
 htmltools::div(class = "table", tbl)
 
 ```
@@ -120,37 +117,37 @@ the US.
 
 #### 2.3 Statistical Areas by Descending Density
 ```{r SA desc density}
-PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
+PlotAllDataByDensity(all_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct, mdn_sa = mdn_sa)
 ```
 
 #### 2.4 The Median Metropolitan Area by Population
 ```{r MSA median popn}
 # Group the data into its metropolitan statistical areas
-msas <- GroupData(all_data, ppn_est = ppn_est, area = area, ppn_pct = ppn_pct,
-                  density = density,
-                  group_by = c(ccode, "MSA_Code", msa_name, "Metro_Micro"))
+msas <- GroupData(all_data, ppn_est = params$ppn_est, area = params$area, ppn_pct = params$ppn_pct,
+                  density = params$density,
+                  group_by = c(params$ccode, "MSA_Code", params$msa_name, "Metro_Micro"))
 
 # Sort by population descending
-msas_by_popn <- SortMSAsbyPopn(msas, cum_pct = cum_pct, ppn_est = ppn_est, ppn_pct = ppn_pct, msa_name = msa_name, group_by = ccode)
-mdn_msa_popn <- FindMedian(msas_by_popn, cum_pct = cum_pct)
+msas_by_popn <- SortMSAsbyPopn(msas, cum_pct = params$cum_pct, ppn_est = params$ppn_est, ppn_pct = params$ppn_pct, msa_name = params$msa_name, group_by = params$ccode)
+mdn_msa_popn <- FindMedian(msas_by_popn, cum_pct = params$cum_pct)
 dplyr::select(mdn_msa_popn, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
 ```
 
 #### 2.5 Metroplitan Areas by Descending Population
 ```{r MSA desc popn}
-PlotMSAsByPopn(msas_by_popn, ppn_est = ppn_est, ccode = ccode, cum_pct = cum_pct)
+PlotMSAsByPopn(msas_by_popn, ppn_est = params$ppn_est, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
 
 #### 2.6 The Median Metropolitan Area by Simple Density
 ```{r MSA median density}
-msas_by_density <- SortMSAsbyDensity(msas, cum_pct = cum_pct, density = density, ppn_pct = ppn_pct, group_by = ccode)
-mdn_msa_density <- FindMedian(msas_by_density, cum_pct = cum_pct)
+msas_by_density <- SortMSAsbyDensity(msas, cum_pct = params$cum_pct, density = params$density, ppn_pct = params$ppn_pct, group_by = params$ccode)
+mdn_msa_density <- FindMedian(msas_by_density, cum_pct = params$cum_pct)
 dplyr::select(mdn_msa_density, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
 ```
 
 #### 2.7 Metropolitan Areas by Descending Simple Density
 ```{r MSA desc density}
-PlotMSAsByDensity(msas_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
+PlotMSAsByDensity(msas_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
 
 ## Source Data
@@ -172,31 +169,4 @@ The repo for this code is [here](https://github.com/qwertytam/geo.popn.density)
 ```{r cssref}
 # CSS stylesheet reference
 htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
-```
-
-```{css cssdefns}
-.table {
-  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.6rem;
-}
-
-.dflt-table {
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-
-.country {
-  display: flex;
-  align-items: center;
-}
-
-.country-flag {
-  height: 1.5rem;
-  border: 1px solid #f0f0f0;
-}
-
-.country-name {
-  margin-left: 0.5rem;
-  font-weight: 700;
-}
 ```
