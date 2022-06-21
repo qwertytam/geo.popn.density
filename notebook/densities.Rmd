@@ -1,12 +1,9 @@
 ---
 title: "Population Densities - Comparing Across (Selected) Countries"
 output:
-  word_document: default
-  github_document: default
-  html_notebook: default
   html_document:
     df_print: paged
-  pdf_document: default
+  html_notebook: default
 keep_md: yes
 ---
 
@@ -42,8 +39,16 @@ method = "method"
 
 # Get the data
 all_data <- GetAllData()
+
+htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
 ```
 
+```{css cssdefns}
+.standings {
+  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.50rem;
+}
+```
 
 ### 2. Data Review
 #### 2.1 Density Calculations by Country
@@ -63,7 +68,7 @@ tble <- dplyr::select(mdn_sa, Country_Code, State_Abbr, MSA_Name, SA_Code, Popn_
 
 ```
 
-```{r}
+```{r reactable}
 tbl <- reactable::reactable(
   tble,
   defaultColDef = reactable::colDef(
@@ -112,17 +117,7 @@ tbl <- reactable::reactable(
 
 htmltools::div(class = "standings", tbl)
 
-htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
-
 ```
-```{css}
-.standings {
-  font-family: Karla, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 1.50rem;
-}
-```
-
-
 #### 2.3 Statistical Areas by Descending Density
 ```{r SA desc density}
 PlotAllDataByDensity(all_by_density, density = density, ccode = ccode, cum_pct = cum_pct)
