@@ -10,6 +10,7 @@ params:
   ccode: "Country_Code"
   sabbr: "State_Abbr"
   msa_name: "MSA_Name"
+  msa_code: "MSA_Code"
   sa_code: "SA_Code"
   ppn_est: "Popn_Est"
   area: "Area_km2"
@@ -62,6 +63,7 @@ htmltools::div(class = "table", tbl)
 
 ##### And by Metropolitan Area
 ``` {r msapopnstats}
+all_data_exc_rural <- ExcRural(all_data, msa_name = params$msa_name, msa_code = params$msa_code)
 tbl <- ShowStats(all_data, group_by = params$msa_name, stat_col = params$ppn_est)
 htmltools::div(class = "table", tbl)
 ```
@@ -76,7 +78,7 @@ htmltools::div(class = "table", tbl)
 
 ##### And by Metropolitan Area
 ``` {r msaareastats}
-tbl <- ShowStats(all_data, group_by = params$msa_name, stat_col = params$area)
+tbl <- ShowStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$area)
 htmltools::div(class = "table", tbl)
 ```
 <br>  
@@ -86,8 +88,10 @@ The "Statistical Area Level 2" is the lowest level statistical area data
 generally available for Australian population and is driving a much lower
 fidelity than that available for the US. This leads to inevitable issues
 of just how comparable these statistic actually across these data sets.  
+Further, the metropolitan statistical area definition looks to typically
+generate a larger geographical area in the US than Australia; again leading
+to issues of comparability.
 <br>  
-
 #### 2.2 Density Calculations by Country
 ```{r density by country}
 densities <- CalcDensities(all_data, ccode = params$ccode, ppn_est = params$ppn_est,
