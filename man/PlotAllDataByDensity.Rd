@@ -20,6 +20,8 @@ PlotAllDataByDensity(
 \item{ccode}{Column name that contains the country code; default is "country_code"}
 
 \item{cum_pct}{Column name that contains the cumulative percentage; default is "cum_pct"}
+
+\item{mdn_sa}{Tibble containing median entries e.g. from \code{geo.popn.density::FindMedian}}
 }
 \description{
 Plot pareto chart of density vs. cumulative population

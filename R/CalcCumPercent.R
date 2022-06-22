@@ -33,7 +33,7 @@ CalcCumPercent <- function(data,
   if(purrr::is_null(metric)) stop("`metric` cannot be `NULL`")
   
   if(purrr::is_null(sort_by)) stop("`sort_by` cannot be `NULL`")
-  
+
   if(!purrr::is_null(group_by)){
     data <- data %>%
       dplyr::ungroup() %>%
