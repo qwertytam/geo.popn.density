@@ -8,11 +8,13 @@
 #' @importFrom magrittr %>%
 #' @importFrom rlang sym .data
 #' @export
-PlotAllDataByDensity <- function(allc_by_density,
-                                 density = "density",
-                                 ccode = "country_code",
-                                 cum_pct = "cum_pct",
-                                 mdn_sa){
+PlotAllDataByDensity <- function(
+    allc_by_density,
+    density = "density",
+    ccode = "country_code",
+    cum_pct = "cum_pct",
+    mdn_sa
+){
   
   allc_by_density <- allc_by_density %>%
     dplyr::slice_max(eval(sym(density))) %>%
@@ -20,7 +22,7 @@ PlotAllDataByDensity <- function(allc_by_density,
     dplyr::bind_rows(allc_by_density) %>%
     dplyr::filter(eval(sym(density)) > 0)
   
-  g_allc_by_density <- mdn_sa %>%
+  mdn_sa %>%
     ggplot2::ggplot(
       ggplot2::aes(
         x = .data$Cum_Popn_Perc,
@@ -57,7 +59,9 @@ PlotAllDataByDensity <- function(allc_by_density,
         decimal.mark = "."
       )
     ) +
+    ggplot2::scale_x_continuous(
+      labels = scales::label_comma(suffix = "%")
+    ) +
     ggplot2::coord_cartesian(ylim = c(0, 10^4))
   
-  g_allc_by_density
 }

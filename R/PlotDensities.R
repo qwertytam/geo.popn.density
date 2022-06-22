@@ -12,25 +12,27 @@
 #' @importFrom rlang sym .data
 #' @export
 #'
-PlotDensities <- function(densities,
-                          density = "density",
-                          ccode = "country_code"){
+PlotDensities <- function(
+    densities,
+    density = "density",
+    ccode = "country_code"
+){
+  
   interval <- 500
+  
   ylim_max <- densities %>%
     dplyr::ungroup() %>%
     dplyr::summarise(Lim = ceiling(max(eval(sym(density))) / interval) * interval) %>%
     dplyr::pull()
   
-  g_avgw_densities <- ggplot2::ggplot(
-    densities,
-    ggplot2::aes(
-      x = .data$method,
-      y = eval(sym(density)),
-      fill = eval(sym(ccode))
-    )
-  )
-  
-  g_avgw_densities +
+  densities %>%
+    ggplot2::ggplot(
+      ggplot2::aes(
+        x = .data$method,
+        y = eval(sym(density)),
+        fill = eval(sym(ccode))
+      )
+    ) +
     ggplot2::geom_bar(
       stat = "identity",
       position = ggplot2::position_dodge()

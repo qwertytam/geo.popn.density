@@ -13,25 +13,35 @@
 #' @importFrom rlang sym
 #' @export
 #'
-PlotMSAsByDensity <- function(msas_by_density,
-                              density = "density",
-                              ccode = "country_code",
-                              cum_pct = "cum_pct"){
-  g_msas_by_density <- msas_by_density %>%
+PlotMSAsByDensity <- function(
+    msas_by_density,
+    density = "density",
+    ccode = "country_code",
+    cum_pct = "cum_pct"
+){
+  msas_by_density %>%
     dplyr::slice_max(eval(sym(density))) %>%
     dplyr::mutate(Cum_Popn_Perc = 0, MSA_Name = "x intercept") %>%
     dplyr::bind_rows(msas_by_density) %>%
     ggplot2::ggplot(
-      ggplot2::aes(x = eval(sym(cum_pct)),
-                   y = eval(sym(density)),
-                   color = eval(sym(ccode)))
-    )
-  
-  g_msas_by_density +
+      ggplot2::aes(
+        x = eval(sym(cum_pct)),
+        y = eval(sym(density)),
+        color = eval(sym(ccode))
+      )
+    )  +
     ggplot2::geom_step(direction = "vh") +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = "Cumulative Percent of Population",
-                  y = bquote(Density (People/km^2)),
-                  title = "Metropolitan Statistical Area Density",
-                  color = "Country")
+    ggplot2::labs(
+      x = "Cumulative Percent of Population",
+      y = bquote(Density (People/km^2)),
+      title = "Metropolitan Statistical Area Density",
+      color = "Country"
+    ) +
+    ggplot2::scale_x_continuous(
+      labels = scales::label_comma(suffix = "%")
+    ) +
+    ggplot2::scale_y_continuous(
+      labels = scales::label_comma(big.mark = ",",)
+    )
 }
