@@ -4,6 +4,7 @@
 #' @param density Column name that contains the density; default is "density"
 #' @param ccode Column name that contains the country code; default is "country_code"
 #' @param cum_pct  Column name that contains the cumulative percentage; default is "cum_pct"
+#' @param mdn_sa  Tibble containing median entries e.g. from `geo.popn.density::FindMedian`
 #' @importFrom magrittr %>%
 #' @importFrom rlang sym .data
 #' @export
@@ -34,7 +35,8 @@ PlotAllDataByDensity <- function(allc_by_density,
         y = .data$Density,
         color = .data$Country_Code
       ),
-      direction = "hv") +
+      direction = "hv"
+    ) +
     ggplot2::geom_point() +
     ggrepel::geom_label_repel(
       ggplot2::aes(
@@ -43,19 +45,19 @@ PlotAllDataByDensity <- function(allc_by_density,
       )
     ) +
     ggplot2::theme_minimal() +
-    ggplot2::labs(x = "Cumulative Percent of Population",
-                  y = bquote(Density (People/km^2)),
-                  title = "Statistical Area Density",
-                  color = "Country") +
+    ggplot2::labs(
+      x = "Cumulative Percent of Population",
+      y = bquote(Density (People/km^2)),
+      title = "Statistical Area Density",
+      color = "Country"
+    ) +
     ggplot2::scale_y_continuous(
-      trans = scales::log10_trans(),
-      breaks = scales::breaks_log(n = 5, base = 10),
-      labels = scales::label_log(base = 10, digits = 2)
-    )
+      labels = scales::label_comma(
+        big.mark = ",",
+        decimal.mark = "."
+      )
+    ) +
+    ggplot2::coord_cartesian(ylim = c(0, 10^4))
   
   g_allc_by_density
-  
-  
-  
-  
 }
