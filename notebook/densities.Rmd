@@ -21,13 +21,14 @@ params:
   table_css: "table"
 ---
 
-## Notebook Summary 
+## Notebook Summary
 This notebook looks at population density metrics for a set of selected countries.
 The basic flow is reading in the data, some data manipulation, then reviewing
 various plots
+\
 
-Current countries in the data:  
-- Australia  
+###### Countries currently in the data:
+- Australia
 - United States of America
 
 ---
@@ -36,7 +37,7 @@ Current countries in the data:
 Data is sourced from the relevant national statistical agencies and gathered
 using scripts in the `data-raw` directory with results stored as `csv` files in
 the `inst/extdata` directory and as `rda` files in the `data` directory.
-<br>  
+\
 
 ```{r setup}
 library(geo.popn.density)
@@ -44,7 +45,9 @@ InitCSS()
 
 all_data <- GetAllData()
 ```
-<br>  
+\
+
+---
 
 ### 2. Data Review
 #### 2.1 Data Coverage
@@ -52,42 +55,46 @@ all_data <- GetAllData()
 ```{r datacoverage}
 ShowTable(TableCountryTotals(all_data), params$table_css)
 ```
-<br>  
+\
 
 ##### Population Summary Statistics by Statistical Area
 ```{r sapopnstats}
 ShowTable(TableSummStats(all_data, stat_col = params$ppn_est), params$table_css)
 ```
-<br>  
+\
 
 ##### And by Metropolitan Area
 ``` {r msapopnstats}
 all_data_exc_rural <- ExcRural(all_data, msa_name = params$msa_name, msa_code = params$msa_code)
 ShowTable(TableSummStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$ppn_est), params$table_css)
 ```
-<br>  
+\
 
 ##### Area Summary Statistics by Statistical Area
 ``` {r saareastats}
 ShowTable(TableSummStats(all_data, stat_col = params$area, dflt_dp = 2), params$table_css)
 ```
-<br>  
+\
 
 ##### And by Metropolitan Area
 ``` {r msaareastats}
 ShowTable(TableSummStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$area, dflt_dp = 2), params$table_css)
 ```
-<br>  
+\
 
 #### Discussion 2022-06-21
-The "Statistical Area Level 2" is the lowest level statistical area data
+The *"Statistical Area Level 2"* is the lowest level statistical area data
 generally available for Australian population and is driving a much lower
 fidelity than that available for the US. This leads to inevitable issues
-of just how comparable these statistic actually across these data sets.  
+of just how comparable these statistic actually across these data sets.\
 Further, the metropolitan statistical area definition looks to typically
 generate a larger geographical area in the US than Australia; again leading
 to issues of comparability.
-<br><br>  
+\
+\
+
+---
+
 
 ### 3 Density Comparisons
 #### 3.1 Density by Country
@@ -96,7 +103,27 @@ densities <- CalcDensities(all_data, ccode = params$ccode, ppn_est = params$ppn_
                            area = params$area, density = params$density, group_by = params$ccode)
 PlotDensities(densities, density = params$density, ccode = params$ccode)
 ```
-<br><br>  
+\
+\
+
+Weighted Arithmetic:
+$\displaystyle \frac{\sum_{i=1}^{n}(density_i * population_i)}{\sum_{i=1}^{n}{population_i}}$\
+\
+
+Weighted Geometric:
+$\displaystyle {\exp(\frac{\sum_{i=1}^{n}(\log(density_i) * population_i)}{\sum_{i=1}^{n}{population_i}})}$\
+\
+
+Weighted Median:
+$\displaystyle {median(density_i)}$\
+\
+
+Simple:
+$\displaystyle \frac{\sum_{i=1}^{n}{population_i}}{\sum_{i=1}^{n}{area_i}}$\
+\
+
+Where: $\displaystyle density_i = \frac{population_i}{area_i}$\
+\
 
 #### Discussion 2022-06-21
 So how dense is Australia vs. USA? Well depends on how you calculate it. The
@@ -104,7 +131,8 @@ arithmetic method is weighted by areas in the US with very high density e.g. in
 New York and Chicago. The median result is interesting as it show the 50th 
 percentile or median person in Australia experiences a higher density than
 the US.
-<br><br>  
+\
+\
 
 #### 3.2 Statistical Areas by Density
 ```{r SA desc density}
@@ -112,7 +140,7 @@ all_by_density <- CalcCumPercent(all_data, cum_pct = params$cum_pct, metric = pa
 mdn_sa <- FindMedian(all_by_density, cum_pct = params$cum_pct)
 PlotAllDataByDensity(all_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct, mdn_sa = mdn_sa)
 ```
-<br><br>  
+\
 
 ##### The Median Statistical Area by Density
 ```{r SA median density}
@@ -120,7 +148,7 @@ PlotAllDataByDensity(all_by_density, density = params$density, ccode = params$cc
 show_cols <- c(params$ccode, params$sabbr, params$msa_name, params$sa_code, params$ppn_est, params$area, params$density, params$cum_pct)
 ShowTable(TableMedian(mdn_sa, show_cols), params$table_css)
 ```
-<br>  
+\
 
 #### 3.3 Metropolitan Areas by Population
 ```{r MSA desc popn}
@@ -134,20 +162,21 @@ show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, param
 
 PlotMSAsByPopn(msas_by_popn, ppn_est = params$ppn_est, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
-<br><br>  
+\
+\
 
 #### The Median Metroplitan Areas by Population
 ```{r MSA median popn}
 ShowTable(TableMedian(mdn_msa_popn, show_cols), params$table_css)
 ```
-<br><br>  
+\
 
 #### 3.4 Metropolitan Areas by Simple Density
 ```{r MSA desc density}
 msas_by_density <- SortMSAsbyDensity(msas, cum_pct = params$cum_pct, density = params$density, ppn_pct = params$ppn_pct, group_by = params$ccode)
 PlotMSAsByDensity(msas_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
-<br><br>  
+\
 
 #### The Median Metroplitan Areas by Simple Density
 ```{r MSA median density}
@@ -155,19 +184,27 @@ mdn_msa_density <- FindMedian(msas_by_density, cum_pct = params$cum_pct)
 show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, params$density, params$cum_pct)
 ShowTable(TableMedian(mdn_msa_density, show_cols), params$table_css)
 ```
-<br><br>  
+\
+\
 
-## Source Data
-### Australia
+---
+
+### Source Data
+#### Australia
 Data sourced from the Australian Bureau of Statistics. Population data sourced
 at the Statistical Area 2 level. See references below for further detail on
 Australian statistical geographic standards. Density is given by the ABS but
 is recalculated here as the population-area-density numbers do not line up as
 given. Data is output to `au.csv` in the data directory.
+\
+\
+
+---
 
 #### References:
 * [Description of the Australian Statistical Geography Standard](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram)
 * [ABS population data by SA2](https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download)
 * [Significant Urban Area to SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
+\
 
-The repo for this code is [here](https://github.com/qwertytam/geo.popn.density)
+The repo for this code is [here on GitHub](https://github.com/qwertytam/geo.popn.density)

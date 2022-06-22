@@ -22,13 +22,16 @@ PlotDensities <- function(
   
   ylim_max <- densities %>%
     dplyr::ungroup() %>%
-    dplyr::summarise(Lim = ceiling(max(eval(sym(density))) / interval) * interval) %>%
+    dplyr::summarise(
+      Lim = ceiling(
+        max(eval(sym(density))) / interval) * interval
+    ) %>%
     dplyr::pull()
   
   densities %>%
     ggplot2::ggplot(
       ggplot2::aes(
-        x = .data$method,
+        x = tools::toTitleCase(.data$method),
         y = eval(sym(density)),
         fill = eval(sym(ccode))
       )
@@ -40,7 +43,10 @@ PlotDensities <- function(
     ggplot2::theme_minimal() +
     ggplot2::geom_text(
       ggplot2::aes(
-        label = round(eval(sym(density)))
+        label = format(
+          round(eval(sym(density))),
+          big.mark = ","
+        )
       ),
       vjust = -1.6,
       color = "black",
