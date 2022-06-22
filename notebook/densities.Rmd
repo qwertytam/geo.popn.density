@@ -18,6 +18,7 @@ params:
   ppn_pct: "Perc_Popn"
   cum_pct: "Cum_Popn_Perc"
   method: "method"
+  table_css: "table"
 ---
 
 ## Notebook Summary 
@@ -26,8 +27,8 @@ The basic flow is reading in the data, some data manipulation, then reviewing
 various plots
 
 Current countries in the data:
-- Australia
-- United States of America
+* Australia
+* United States of America
 
 ---
 
@@ -36,50 +37,45 @@ Data is sourced from the relevant national statistical agencies and gathered
 using scripts in the `data-raw` directory with results stored as `csv` files in
 the `inst/extdata` directory and as `rda` files in the `data` directory.
 <br>  
-  
-##### Initialisation
+
 ```{r setup}
 library(geo.popn.density)
+InitCSS()
 
 all_data <- GetAllData()
 ```
 <br>  
-  
+
 ### 2. Data Review
 #### 2.1 Data Coverage
 ##### Total Population, Area and Avg. Density by Country
 ```{r datacoverage}
-tbl <- ShowCountryTotals(all_data)
-htmltools::div(class = "table", tbl)
+ShowTable(TableCountryTotals(all_data), params$table_css)
 ```
 <br>  
-  
+
 ##### Population Summary Statistics by Statistical Area
 ```{r sapopnstats}
-tbl <- ShowStats(all_data, stat_col = params$ppn_est)
-htmltools::div(class = "table", tbl)
+ShowTable(TableSummStats(all_data, stat_col = params$ppn_est), params$table_css)
 ```
 <br>  
 
 ##### And by Metropolitan Area
 ``` {r msapopnstats}
 all_data_exc_rural <- ExcRural(all_data, msa_name = params$msa_name, msa_code = params$msa_code)
-tbl <- ShowStats(all_data, group_by = params$msa_name, stat_col = params$ppn_est)
-htmltools::div(class = "table", tbl)
+ShowTable(TableSummStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$ppn_est), params$table_css)
 ```
 <br>  
-  
+
 ##### Area Summary Statistics by Statistical Area
 ``` {r saareastats}
-tbl <- ShowStats(all_data, stat_col = params$area)
-htmltools::div(class = "table", tbl)
+ShowTable(TableSummStats(all_data, stat_col = params$area, dflt_dp = 2), params$table_css)
 ```
 <br>  
 
 ##### And by Metropolitan Area
 ``` {r msaareastats}
-tbl <- ShowStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$area)
-htmltools::div(class = "table", tbl)
+ShowTable(TableSummStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$area, dflt_dp = 2), params$table_css)
 ```
 <br>  
 
@@ -91,11 +87,13 @@ of just how comparable these statistic actually across these data sets.
 Further, the metropolitan statistical area definition looks to typically
 generate a larger geographical area in the US than Australia; again leading
 to issues of comparability.
-<br>  
-#### 2.2 Density Calculations by Country
+<br><br>  
+
+### 3 Density Comparisons
+#### 3.1 Density by Country
 ```{r density by country}
 densities <- CalcDensities(all_data, ccode = params$ccode, ppn_est = params$ppn_est,
-                               area = params$area, density = params$density, group_by = params$ccode)
+                           area = params$area, density = params$density, group_by = params$ccode)
 PlotDensities(densities, density = params$density, ccode = params$ccode)
 ```
 <br><br>  
@@ -105,9 +103,8 @@ PlotDensities(densities, density = params$density, ccode = params$ccode)
 # Sorting the data by descending data and calculating the cumulative percentage population to find the median
 all_by_density <- CalcCumPercent(all_data, cum_pct = params$cum_pct, metric = params$ppn_est, sort_by = params$density, group_by = params$ccode)
 mdn_sa <- FindMedian(all_by_density, cum_pct = params$cum_pct)
-tbl <- ShowMedianTable(mdn_sa, c(params$ccode, params$sabbr, params$msa_name, params$sa_code, params$ppn_est, params$area, params$density, params$cum_pct))
-htmltools::div(class = "table", tbl)
-
+show_cols <- c(params$ccode, params$sabbr, params$msa_name, params$sa_code, params$ppn_est, params$area, params$density, params$cum_pct)
+ShowTable(TableMedian(mdn_sa, show_cols), params$table_css)
 ```
 <br>  
 
@@ -119,40 +116,45 @@ percentile or median person in Australia experiences a higher density than
 the US.
 <br><br>  
 
-#### 2.3 Statistical Areas by Descending Density
+#### 3.2 Statistical Areas by Descending Density
 ```{r SA desc density}
 PlotAllDataByDensity(all_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct, mdn_sa = mdn_sa)
 ```
+<br><br>  
 
-#### 2.4 The Median Metropolitan Area by Population
+#### 3.3 The Median Metropolitan Area by Population
 ```{r MSA median popn}
 # Group the data into its metropolitan statistical areas
-msas <- GroupData(all_data, ppn_est = params$ppn_est, area = params$area, ppn_pct = params$ppn_pct,
-                  density = params$density,
-                  group_by = c(params$ccode, "MSA_Code", params$msa_name, "Metro_Micro"))
+msas <- GroupData(all_data, ppn_est = params$ppn_est, area = params$area, ppn_pct = params$ppn_pct, density = params$density, group_by = c(params$ccode, "MSA_Code", params$msa_name, "Metro_Micro"))
 
 # Sort by population descending
 msas_by_popn <- SortMSAsbyPopn(msas, cum_pct = params$cum_pct, ppn_est = params$ppn_est, ppn_pct = params$ppn_pct, msa_name = params$msa_name, group_by = params$ccode)
 mdn_msa_popn <- FindMedian(msas_by_popn, cum_pct = params$cum_pct)
-dplyr::select(mdn_msa_popn, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, params$density, params$cum_pct)
+ShowTable(TableMedian(mdn_msa_popn, show_cols), params$table_css)
 ```
+<br><br>  
 
-#### 2.5 Metroplitan Areas by Descending Population
+#### 3.4 Metroplitan Areas by Descending Population
 ```{r MSA desc popn}
 PlotMSAsByPopn(msas_by_popn, ppn_est = params$ppn_est, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
+<br><br>  
 
-#### 2.6 The Median Metropolitan Area by Simple Density
+#### 3.5 The Median Metropolitan Area by Simple Density
 ```{r MSA median density}
 msas_by_density <- SortMSAsbyDensity(msas, cum_pct = params$cum_pct, density = params$density, ppn_pct = params$ppn_pct, group_by = params$ccode)
 mdn_msa_density <- FindMedian(msas_by_density, cum_pct = params$cum_pct)
-dplyr::select(mdn_msa_density, Country_Code, MSA_Name, Popn_Est, Area_km2, Density, Cum_Popn_Perc)
+show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, params$density, params$cum_pct)
+ShowTable(TableMedian(mdn_msa_density, show_cols), params$table_css)
 ```
+<br><br>  
 
-#### 2.7 Metropolitan Areas by Descending Simple Density
+#### 3.6 Metropolitan Areas by Descending Simple Density
 ```{r MSA desc density}
 PlotMSAsByDensity(msas_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
+<br><br>  
 
 ## Source Data
 ### Australia
@@ -168,9 +170,3 @@ given. Data is output to `au.csv` in the data directory.
 * [Significant Urban Area to SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
 
 The repo for this code is [here](https://github.com/qwertytam/geo.popn.density)
-
-
-```{r cssref}
-# CSS stylesheet reference
-htmltools::tags$link(href = "https://fonts.googleapis.com/css?family=Karla:400,700|Fira+Mono&display=fallback", rel = "stylesheet")
-```
