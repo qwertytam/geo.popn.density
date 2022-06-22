@@ -2,6 +2,7 @@
 
 export(CalcCumPercent)
 export(CalcDensities)
+export(ExcRural)
 export(FindMedian)
 export(GetAllData)
 export(GroupData)
