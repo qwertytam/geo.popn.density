@@ -37,10 +37,10 @@ ShowStats <- function(data, group_by = NULL, stat_col){
     dplyr::summarise(
       Count = dplyr::n(),
       Min = min(!!! syms(stat_col)),
-      Median = median(!!! syms(stat_col)),
+      Median = stats::median(!!! syms(stat_col)),
       Mean = mean(!!! syms(stat_col)),
       Max = max(!!! syms(stat_col)),
-      "Std. Dev." = sd(!!! syms(stat_col))
+      "Std. Dev." = stats::sd(!!! syms(stat_col))
     ) %>%
     reactable::reactable(
       defaultColDef = colDef(
