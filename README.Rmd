@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# geo_popn_density
+# geo.popn.density
 
 <!-- badges: start -->
 <!-- badges: end -->

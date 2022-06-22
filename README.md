@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# geo_popn_density
+# geo.popn.density
 
 <!-- badges: start -->
 <!-- badges: end -->
