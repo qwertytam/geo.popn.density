@@ -26,9 +26,9 @@ This notebook looks at population density metrics for a set of selected countrie
 The basic flow is reading in the data, some data manipulation, then reviewing
 various plots
 
-Current countries in the data:
-* Australia
-* United States of America
+Current countries in the data:  
+- Australia  
+- United States of America
 
 ---
 

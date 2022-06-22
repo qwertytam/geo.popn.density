@@ -18,8 +18,10 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of geo_popn_density is to analyse the population densities for selected
-countries - currently only Australia and the United States.
+The goal of geo.popn.density is to analyse the population densities for selected
+countries, currently:  
+- Australia  
+- United States
 
 ## Installation
 
