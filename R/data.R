@@ -30,7 +30,7 @@
 #' US population and population densities at the census 'tract' level.
 #' 
 #' This dataset was produced from US Census Bureau data
-#'  available from  \url{https://www.census.gov/"/}.
+#'  available from  \url{https://www.census.gov/"/} via the `tidycensus` package.
 #'
 #' @format A data frame with 85062 rows and 14 variables:
 #' \describe{
