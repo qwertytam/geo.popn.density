@@ -98,16 +98,6 @@ PlotDensities(densities, density = params$density, ccode = params$ccode)
 ```
 <br><br>  
 
-##### The Median Statistical Area by Density
-```{r SA median density}
-# Sorting the data by descending data and calculating the cumulative percentage population to find the median
-all_by_density <- CalcCumPercent(all_data, cum_pct = params$cum_pct, metric = params$ppn_est, sort_by = params$density, group_by = params$ccode)
-mdn_sa <- FindMedian(all_by_density, cum_pct = params$cum_pct)
-show_cols <- c(params$ccode, params$sabbr, params$msa_name, params$sa_code, params$ppn_est, params$area, params$density, params$cum_pct)
-ShowTable(TableMedian(mdn_sa, show_cols), params$table_css)
-```
-<br>  
-
 #### Discussion 2022-06-21
 So how dense is Australia vs. USA? Well depends on how you calculate it. The
 arithmetic method is weighted by areas in the US with very high density e.g. in
@@ -116,14 +106,24 @@ percentile or median person in Australia experiences a higher density than
 the US.
 <br><br>  
 
-#### 3.2 Statistical Areas by Descending Density
+#### 3.2 Statistical Areas by Density
 ```{r SA desc density}
+all_by_density <- CalcCumPercent(all_data, cum_pct = params$cum_pct, metric = params$ppn_est, sort_by = params$density, group_by = params$ccode)
+mdn_sa <- FindMedian(all_by_density, cum_pct = params$cum_pct)
 PlotAllDataByDensity(all_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct, mdn_sa = mdn_sa)
 ```
 <br><br>  
 
-#### 3.3 The Median Metropolitan Area by Population
-```{r MSA median popn}
+##### The Median Statistical Area by Density
+```{r SA median density}
+# Sorting the data by descending data and calculating the cumulative percentage population to find the median
+show_cols <- c(params$ccode, params$sabbr, params$msa_name, params$sa_code, params$ppn_est, params$area, params$density, params$cum_pct)
+ShowTable(TableMedian(mdn_sa, show_cols), params$table_css)
+```
+<br>  
+
+#### 3.3 Metropolitan Areas by Population
+```{r MSA desc popn}
 # Group the data into its metropolitan statistical areas
 msas <- GroupData(all_data, ppn_est = params$ppn_est, area = params$area, ppn_pct = params$ppn_pct, density = params$density, group_by = c(params$ccode, "MSA_Code", params$msa_name, "Metro_Micro"))
 
@@ -131,28 +131,29 @@ msas <- GroupData(all_data, ppn_est = params$ppn_est, area = params$area, ppn_pc
 msas_by_popn <- SortMSAsbyPopn(msas, cum_pct = params$cum_pct, ppn_est = params$ppn_est, ppn_pct = params$ppn_pct, msa_name = params$msa_name, group_by = params$ccode)
 mdn_msa_popn <- FindMedian(msas_by_popn, cum_pct = params$cum_pct)
 show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, params$density, params$cum_pct)
-ShowTable(TableMedian(mdn_msa_popn, show_cols), params$table_css)
-```
-<br><br>  
 
-#### 3.4 Metroplitan Areas by Descending Population
-```{r MSA desc popn}
 PlotMSAsByPopn(msas_by_popn, ppn_est = params$ppn_est, ccode = params$ccode, cum_pct = params$cum_pct)
 ```
 <br><br>  
 
-#### 3.5 The Median Metropolitan Area by Simple Density
-```{r MSA median density}
-msas_by_density <- SortMSAsbyDensity(msas, cum_pct = params$cum_pct, density = params$density, ppn_pct = params$ppn_pct, group_by = params$ccode)
-mdn_msa_density <- FindMedian(msas_by_density, cum_pct = params$cum_pct)
-show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, params$density, params$cum_pct)
-ShowTable(TableMedian(mdn_msa_density, show_cols), params$table_css)
+#### The Median Metroplitan Areas by Population
+```{r MSA median popn}
+ShowTable(TableMedian(mdn_msa_popn, show_cols), params$table_css)
 ```
 <br><br>  
 
-#### 3.6 Metropolitan Areas by Descending Simple Density
+#### 3.4 Metropolitan Areas by Simple Density
 ```{r MSA desc density}
+msas_by_density <- SortMSAsbyDensity(msas, cum_pct = params$cum_pct, density = params$density, ppn_pct = params$ppn_pct, group_by = params$ccode)
 PlotMSAsByDensity(msas_by_density, density = params$density, ccode = params$ccode, cum_pct = params$cum_pct)
+```
+<br><br>  
+
+#### The Median Metroplitan Areas by Simple Density
+```{r MSA median density}
+mdn_msa_density <- FindMedian(msas_by_density, cum_pct = params$cum_pct)
+show_cols <- c(params$ccode, params$msa_name, params$ppn_est, params$area, params$density, params$cum_pct)
+ShowTable(TableMedian(mdn_msa_density, show_cols), params$table_css)
 ```
 <br><br>  
 
