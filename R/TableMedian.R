@@ -18,7 +18,7 @@
 #' @importFrom htmltools div img span
 #' @export
 #'
-ShowMedianTable <- function(data, show_cols){
+TableMedian <- function(data, show_cols){
   imgpath <- "https://raw.githubusercontent.com/qwertytam/geo.popn.density/master/notebook/images/"
   
   tbl <- data %>%

@@ -13,7 +13,7 @@
 #' @importFrom htmltools div img span
 #' @export
 #'
-ShowCountryTotals <- function(data){
+TableCountryTotals <- function(data){
   imgpath <- "https://raw.githubusercontent.com/qwertytam/geo.popn.density/master/notebook/images/"
   
   tbl <- data %>%

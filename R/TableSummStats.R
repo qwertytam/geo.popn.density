@@ -11,6 +11,7 @@
 #'   to group and calculate the cumulative percentages for e.g.
 #'   `c("State_Name")`. If `NULL` then only grouping by `Country_Code` will occur.
 #' @param stat_col Column name to calculate the stats on e.g. `area`
+#' @param dflt_dp Default number of decimal points to show
 #' @return A reactable formatted table
 #' @importFrom magrittr %>%
 #' @importFrom rlang .data syms
@@ -19,7 +20,7 @@
 #' @importFrom tidyselect vars_select_helpers
 #' @export
 #'
-ShowStats <- function(data, group_by = NULL, stat_col){
+TableSummStats <- function(data, group_by = NULL, stat_col, dflt_dp = 0){
   imgpath <- "https://raw.githubusercontent.com/qwertytam/geo.popn.density/master/notebook/images/"
   
   data <- data %>%
@@ -46,7 +47,7 @@ ShowStats <- function(data, group_by = NULL, stat_col){
       defaultColDef = colDef(
         align = "center",
         minWidth = 80,
-        format = colFormat(digits = 2,
+        format = colFormat(digits = dflt_dp,
                            separators = TRUE,
                            locales = "en-GB")
       ),
@@ -67,6 +68,11 @@ ShowStats <- function(data, group_by = NULL, stat_col){
           }
         ),
         Count = colDef(
+          format = colFormat(digits = 0,
+                             separators = TRUE,
+                             locales = "en-GB")
+        ),
+        Max = colDef(
           format = colFormat(digits = 0,
                              separators = TRUE,
                              locales = "en-GB")
