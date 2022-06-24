@@ -27,3 +27,4 @@ Imports:
     rlang,
     scales,
     tidyselect,
+    tigris,
