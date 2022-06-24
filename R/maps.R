@@ -98,3 +98,25 @@ aus_map <- summarise(aus)
 ggplot2::ggplot(aus_map) + 
   ggplot2::geom_sf() + 
   ggplot2::theme_void()
+
+
+
+library(googleway)
+
+usethis::edit_r_environ(scope = "user")
+
+gmaps_key <- Sys.getenv("GOOGLE_MAPS_API_KEY")
+
+gfp <- google_find_place(
+  input = "Chicago",
+  key = gmaps_key
+)
+
+google_map(
+  location = as.numeric(gfp$candidates$geometry$location[1, ]),
+  zoom = 15,
+  key = gmaps_key
+)
+
+
+
