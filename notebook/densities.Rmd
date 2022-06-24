@@ -23,8 +23,7 @@ params:
 
 ## Notebook Summary
 This notebook looks at population density metrics for a set of selected countries.
-The basic flow is reading in the data, some data manipulation, then reviewing
-various plots
+For some further detail on data sources and definitions, see the end of this notebook.
 \
 
 ###### Countries currently in the data:
@@ -68,6 +67,7 @@ ShowTable(TableSummStats(all_data, stat_col = params$ppn_est), params$table_css)
 all_data_exc_rural <- ExcRural(all_data, msa_name = params$msa_name, msa_code = params$msa_code)
 ShowTable(TableSummStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$ppn_est), params$table_css)
 ```
+Note, includes *Metropolitan* and *Micropolitan* areas in the US data.
 \
 
 ##### Area Summary Statistics by Statistical Area
@@ -80,6 +80,7 @@ ShowTable(TableSummStats(all_data, stat_col = params$area, dflt_dp = 2), params$
 ``` {r msaareastats}
 ShowTable(TableSummStats(all_data_exc_rural, group_by = params$msa_name, stat_col = params$area, dflt_dp = 2), params$table_css)
 ```
+Note, includes *Metropolitan* and *Micropolitan* areas in the US data.
 \
 
 #### Discussion 2022-06-21
@@ -197,14 +198,24 @@ Australian statistical geographic standards. Density is given by the ABS but
 is recalculated here as the population-area-density numbers do not line up as
 given. Data is output to `au.csv` in the data directory.
 \
-\
 
----
-
-#### References:
+##### References:
 * [Description of the Australian Statistical Geography Standard](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026#asgs-diagram)
 * [ABS population data by SA2](https://www.abs.gov.au/statistics/people/population/regional-population/2020-21#data-download)
 * [Significant Urban Area to SA2](https://www.abs.gov.au/AUSSTATS/abs@.nsf/DetailsPage/1270.0.55.004July%202016?OpenDocument)
 \
+\
 
+#### United States
+Data sourced from the US census bureau via the `tidycensus` package.
+Population data sourced at the census `tract` level. Data is output to `us.csv` 
+in the data directory.
+\
+
+##### References:
+* [Census Bureau guide to statistical areas hireachy and defintions](https://www.census.gov/programs-surveys/geography/guidance.html)
+* [Census Bureau guide to metroplitan and micropolitan statiscal areas](https://www.census.gov/programs-surveys/metro-micro.html)
+\
+
+### Source Code
 The repo for this code is [here on GitHub](https://github.com/qwertytam/geo.popn.density)
